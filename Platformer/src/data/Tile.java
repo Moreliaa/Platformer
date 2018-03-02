@@ -1,6 +1,7 @@
 package data;
 
-import static helpers.Graphics.*;
+import static helpers.Graphics.drawQuadTex;
+import static helpers.Graphics.tileSize;
 
 public class Tile {
 

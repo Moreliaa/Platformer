@@ -1,6 +1,8 @@
 package data;
 
-import static helpers.Graphics.*;
+import static helpers.Graphics.HEIGHT;
+import static helpers.Graphics.WIDTH;
+import static helpers.Graphics.tileSize;
 
 public class TileGrid {
 	private Tile[][] map;
@@ -51,7 +53,7 @@ public class TileGrid {
 		if (xCoord >= 0 && xCoord < mapWidth && yCoord >= 0 && yCoord < mapHeight) {
 			return map[xCoord][yCoord];
 		} else {
-			return new Tile(0, 0, TileType.NULL);
+			return new Tile(0, 0, TileType.Background);
 		}
 
 	}

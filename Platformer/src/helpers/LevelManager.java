@@ -7,13 +7,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import data.Tile;
 import data.TileGrid;
 import data.TileType;
 
 public class LevelManager {
 
 	private static String mapDirectory = "maps/";
+	private final static int TILE_ID_SIZE = 3; // Number of digits in the tile id
 
 	/**
 	 * Saves a map into the designated map directory. The format is
@@ -28,7 +28,7 @@ public class LevelManager {
 
 		for (int i = 0; i < grid.getMapWidth(); i++) {
 			for (int j = 0; j < grid.getMapHeight(); j++) {
-				mapData += getTileID(grid.getTile(i, j));
+				mapData += grid.getTile(i, j).getType().getID(); // write the tile type ID into the file
 			}
 		}
 
@@ -38,7 +38,6 @@ public class LevelManager {
 			bw.write(mapData);
 			bw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -76,8 +75,10 @@ public class LevelManager {
 			// Read the tile data
 			for (int i = 0; i < grid.getMapWidth(); i++) {
 				for (int j = 0; j < grid.getMapHeight(); j++) {
+					// read the tile type ID
 					grid.setTile(i, j,
-							getTileType(data.substring(i * grid.getMapHeight() + j, i * grid.getMapHeight() + j + 1)));
+							getTileType(data.substring(i * grid.getMapHeight() * TILE_ID_SIZE + j * TILE_ID_SIZE,
+									i * grid.getMapHeight() * TILE_ID_SIZE + j * TILE_ID_SIZE + TILE_ID_SIZE)));
 				}
 			}
 
@@ -86,7 +87,6 @@ public class LevelManager {
 			return grid;
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -95,29 +95,13 @@ public class LevelManager {
 	}
 
 	private static TileType getTileType(String ID) {
-		switch (ID) {
-		case "0":
-			return TileType.Background;
-		case "1":
-			return TileType.Block;
-		default:
-			return TileType.Background;
-		}
-	}
-
-	private static String getTileID(Tile t) {
-		String ID = "E";
-
-		switch (t.getType()) {
-		case Background:
-			ID = "0";
-			break;
-		case Block:
-			ID = "1";
-			break;
-		default:
+		for (TileType t : TileType.values()) {
+			if (ID.compareTo(t.getID()) == 0)
+				return t;
 		}
 
-		return ID;
+		System.out.println("Invalid tile type.");
+
+		return TileType.Background;
 	}
 }
