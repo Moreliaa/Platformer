@@ -1,6 +1,9 @@
 package character;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 import helpers.Clock;
 import helpers.KeyboardHandler;
@@ -13,7 +16,7 @@ public class StateStanding extends CharacterState {
 	 */
 	@Override
 	public void enter(Character c) {
-
+		c.boostsLeft = c.boostsPerJump; // restore boost ability
 	}
 
 	@Override

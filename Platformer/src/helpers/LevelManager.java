@@ -17,8 +17,8 @@ public class LevelManager {
 
 	/**
 	 * Saves a map into the designated map directory. The format is
-	 * WIDTH-HEIGHT-MAPDATA where the map data is comprised of single-digit integers
-	 * identifying each tile.
+	 * WIDTH-HEIGHT-MAPDATA where the map data is comprised of tile type IDs as
+	 * defined in the TileType class.
 	 */
 	public static void saveMap(String mapName, TileGrid grid) {
 		String mapData = "";
@@ -72,10 +72,9 @@ public class LevelManager {
 
 			grid = new TileGrid(mapWidth, mapHeight);
 
-			// Read the tile data
 			for (int i = 0; i < grid.getMapWidth(); i++) {
 				for (int j = 0; j < grid.getMapHeight(); j++) {
-					// read the tile type ID
+					// read the tile type ID for the current tile
 					grid.setTile(i, j,
 							getTileType(data.substring(i * grid.getMapHeight() * TILE_ID_SIZE + j * TILE_ID_SIZE,
 									i * grid.getMapHeight() * TILE_ID_SIZE + j * TILE_ID_SIZE + TILE_ID_SIZE)));

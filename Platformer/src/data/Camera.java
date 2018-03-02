@@ -1,11 +1,14 @@
 package data;
 
-import static helpers.Graphics.*;
+import static helpers.Graphics.HEIGHT;
+import static helpers.Graphics.WIDTH;
+import static helpers.Graphics.tileSize;
 
 import character.Character;
 
 public class Camera {
 	private float x, y, xMax, yMax;
+	private WaveSine screenShake;
 
 	public Camera(TileGrid grid) {
 		x = 0;
@@ -13,6 +16,8 @@ public class Camera {
 
 		xMax = grid.getMapWidth() * tileSize - WIDTH;
 		yMax = grid.getMapHeight() * tileSize - HEIGHT;
+
+		this.screenShake = null;
 
 		if (xMax < 0)
 			xMax = 0;
@@ -25,13 +30,15 @@ public class Camera {
 		this.y = y;
 
 		checkBounds();
+		applyScreenShake();
 	}
-	
+
 	public void move(float xSpeed, float ySpeed) {
 		this.x += xSpeed;
 		this.y += ySpeed;
 
 		checkBounds();
+		applyScreenShake();
 	}
 
 	public void centerOn(Character c) {
@@ -44,7 +51,12 @@ public class Camera {
 		this.y = y + (height / 2) - (HEIGHT / 2);
 
 		checkBounds();
+		applyScreenShake();
 
+	}
+
+	public void shake(float amplitudeInPixels, int lengthInFrames) {
+		screenShake = new WaveSine(amplitudeInPixels, lengthInFrames);
 	}
 
 	private void checkBounds() {
@@ -57,6 +69,17 @@ public class Camera {
 			this.x = xMax;
 		if (this.y > yMax)
 			this.y = yMax;
+	}
+
+	private void applyScreenShake() {
+		if (screenShake != null) {
+			float phase = screenShake.getPhase();
+
+			if (phase == 0) // effect finished
+				screenShake = null;
+			else
+				this.y += phase;
+		}
 	}
 
 	public float getX() {

@@ -1,27 +1,27 @@
 package data;
 
-import static helpers.Graphics.*;
-import static helpers.LevelManager.*;
+import static helpers.Graphics.tileSize;
+import static helpers.LevelManager.loadMap;
 
 import character.Character;
 
 public class Game {
 
 	private TileGrid grid;
-	private Character character;
 	private Camera camera;
+	private Character character;
 
 	public Game(int[][] map) {
 		this.grid = new TileGrid(map);
-		this.character = new Character(grid, 9 * tileSize, 4 * tileSize);
 		this.camera = new Camera(grid);
+		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 
 	}
-	
+
 	public Game(String map) {
 		this.grid = loadMap(map);
-		this.character = new Character(grid, 9 * tileSize, 4 * tileSize);
 		this.camera = new Camera(grid);
+		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 	}
 
 	public void update() {

@@ -1,18 +1,23 @@
 package character;
 
+import static helpers.Clock.delta;
+import static helpers.Graphics.drawLineLoop;
+import static helpers.Graphics.drawQuadTex;
+import static helpers.Graphics.drawQuadTexFlipHorizontal;
+import static helpers.Graphics.tileSize;
+import static helpers.Physics.checkCollision;
+
 import java.util.ArrayList;
 
 import data.Camera;
 import data.Texture;
 import data.Tile;
 import data.TileGrid;
-import static helpers.Graphics.*;
-import static helpers.Clock.*;
-import static helpers.Physics.*;
 
 public class Character {
 
 	private TileGrid grid;
+	private Camera camera;
 	float x, y; // physical x and y coordinates
 	float xSpeed, ySpeed; // axis aligned speed vectors
 	float maxSpeed; // default max xSpeed, unrelated to ySpeed
@@ -25,14 +30,16 @@ public class Character {
 	States state;
 	boolean facingRight; // returns true while the character is facing to the right
 
-	boolean jumpDisabled;
-	boolean boostDisabled;
+	boolean jumpDisabled, boostDisabled;
+
+	int boostsPerJump, boostsLeft;
 
 	boolean dashActive;
 	float framesHeldLeft, framesHeldRight, framesUntilDashActivation;
 
-	public Character(TileGrid grid, float x, float y) {
+	public Character(TileGrid grid, Camera c, float x, float y) {
 		this.grid = grid;
+		this.camera = c;
 		this.x = x;
 		this.y = y;
 		this.xSpeed = 0;
@@ -48,6 +55,9 @@ public class Character {
 
 		this.jumpDisabled = true;
 		this.boostDisabled = false;
+
+		this.boostsPerJump = 1;
+		this.boostsLeft = 1;
 
 		this.dashActive = false;
 		this.framesHeldLeft = 0;
@@ -224,6 +234,14 @@ public class Character {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(Camera camera) {
+		this.camera = camera;
 	}
 
 }

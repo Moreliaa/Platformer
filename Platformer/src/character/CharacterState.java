@@ -1,8 +1,11 @@
 package character;
 
-import static helpers.Physics.*;
-import static helpers.Clock.*;
-import static org.lwjgl.glfw.GLFW.*;
+import static helpers.Clock.delta;
+import static helpers.Physics.getGravity;
+import static helpers.Physics.getMaxFallSpeed;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
 import helpers.KeyboardHandler;
 
@@ -41,7 +44,7 @@ public abstract class CharacterState {
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_A))
 			c.boostDisabled = true;
-		else
+		else if (c.boostsLeft > 0)
 			c.boostDisabled = false;
 	}
 
