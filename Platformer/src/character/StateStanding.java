@@ -1,10 +1,10 @@
 package character;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
+import data.EffectAfterimage;
 import helpers.Clock;
 import helpers.KeyboardHandler;
 import helpers.Physics;
@@ -21,9 +21,6 @@ public class StateStanding extends CharacterState {
 
 	@Override
 	public void handleInput(Character c) {
-		if (KeyboardHandler.isKeyDown(GLFW_KEY_A) && !c.boostDisabled)
-			enterNewState(c, States.Boosting);
-
 		if (!KeyboardHandler.isKeyDown(GLFW_KEY_UP)) {
 			c.jumpDisabled = false;
 		}
@@ -43,6 +40,11 @@ public class StateStanding extends CharacterState {
 
 	@Override
 	public void update(Character c) {
+		if (c.dashActive) {
+			EffectAfterimage e = new EffectAfterimage(c, c.state.sprite.getCurrentTexture(), 1, 1, 1);
+			data.Game.addNewEffect(e);
+		}
+
 		super.handleGravity(c);
 	}
 

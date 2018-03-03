@@ -1,7 +1,12 @@
 package character;
 
-import static helpers.Physics.*;
-import static org.lwjgl.glfw.GLFW.*;
+import static helpers.Physics.getInitialSmallJumpVelocity;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+
+import data.EffectAfterimage;
 import helpers.KeyboardHandler;
 
 public class StateJumping extends CharacterState {
@@ -36,21 +41,26 @@ public class StateJumping extends CharacterState {
 
 	@Override
 	public void update(Character c) {
+		if (c.dashActive) {
+			EffectAfterimage e = new EffectAfterimage(c, c.state.sprite.getCurrentTexture(), 1, 1, 1);
+			data.Game.addNewEffect(e);
+		}
+
 		if (c.xSpeed < c.maxSpeed * (-1))
 			c.xSpeed += c.airFriction;
 		if (c.xSpeed < 0)
 			c.xSpeed += c.airFriction;
-	
+
 		if (c.xSpeed > c.maxSpeed)
 			c.xSpeed -= c.airFriction;
 		if (c.xSpeed > 0)
 			c.xSpeed -= c.airFriction;
-	
+
 		if (Math.abs(c.xSpeed) < c.airFriction)
 			c.xSpeed = 0;
-	
+
 		super.handleGravity(c);
-	
+
 		if (c.ySpeed > 0) {
 			c.jumpDisabled = true;
 		}

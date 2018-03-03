@@ -61,8 +61,8 @@ public class Character {
 		this.jumpDisabled = true;
 		this.boostDisabled = false;
 
-		this.boostsPerJump = 1;
-		this.boostsLeft = 1;
+		this.boostsPerJump = 2;
+		this.boostsLeft = boostsPerJump;
 
 		this.dashActive = false;
 		this.framesHeldLeft = 0;

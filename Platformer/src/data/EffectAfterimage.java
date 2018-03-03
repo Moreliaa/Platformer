@@ -11,6 +11,17 @@ public class EffectAfterimage implements Effect {
 	private int numberOfImages, spawnInterval, fadeTime, currentFrame, totalFrames;
 	private float[] xPos, yPos;
 
+	/**
+	 * 
+	 * @param character
+	 * @param texture
+	 * @param numberOfImages
+	 *            The number of afterimages to be created.
+	 * @param spawnInterval
+	 *            Frames between spawning each afterimage.
+	 * @param fadeTime
+	 *            Delay until each afterimage disappears.
+	 */
 	public EffectAfterimage(Character character, Texture texture, int numberOfImages, int spawnInterval, int fadeTime) {
 		this.character = character;
 		this.texture = texture;
