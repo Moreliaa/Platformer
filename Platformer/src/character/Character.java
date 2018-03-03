@@ -27,6 +27,8 @@ public class Character {
 
 	int width, height; // hitbox dimensions
 
+	float xTextureOffset, yTextureOffset;
+
 	States state;
 	boolean facingRight; // returns true while the character is facing to the right
 
@@ -49,6 +51,9 @@ public class Character {
 		this.airFriction = 0.1f;
 		this.width = 60;
 		this.height = 115;
+
+		this.xTextureOffset = 0;
+		this.yTextureOffset = 0;
 
 		this.state = States.Standing;
 		this.facingRight = true;
@@ -191,13 +196,13 @@ public class Character {
 
 	public void draw(Camera c) {
 		Texture t = state.sprite.animate();
-		float xTexture = x - ((t.getWidth() - width) / 2);
-		float yTexture = y - ((t.getHeight() - height)) + 18;
+
+		setTextureOffsets();
 
 		if (facingRight)
-			drawQuadTex(c, t, xTexture, yTexture, t.getWidth(), t.getHeight());
+			drawQuadTex(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
 		else
-			drawQuadTexFlipHorizontal(c, t, xTexture, yTexture, t.getWidth(), t.getHeight());
+			drawQuadTexFlipHorizontal(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
 	}
 
 	public void drawHitbox(Camera c) {
@@ -234,6 +239,25 @@ public class Character {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public float getxTextureOffset() {
+		return xTextureOffset;
+	}
+
+	public float getyTextureOffset() {
+		return yTextureOffset;
+	}
+
+	private void setTextureOffsets() {
+		Texture t = state.sprite.getCurrentTexture();
+		xTextureOffset = x - ((t.getWidth() - width) / 2);
+		yTextureOffset = y - ((t.getHeight() - height)) + 18;
+
+	}
+
+	public boolean isFacingRight() {
+		return facingRight;
 	}
 
 	public Camera getCamera() {

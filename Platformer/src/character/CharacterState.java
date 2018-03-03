@@ -12,11 +12,9 @@ import helpers.KeyboardHandler;
 public abstract class CharacterState {
 
 	/**
-	 * Called whenever this state is entered.
+	 * Called whenever a state is entered.
 	 */
-	public void enter(Character c) {
-
-	}
+	abstract public void enter(Character c);
 
 	/**
 	 * Must be called to enter a new state.
@@ -28,13 +26,9 @@ public abstract class CharacterState {
 		}
 	}
 
-	public void handleInput(Character c) {
-		// input should be handled for each state individually
-	}
+	abstract public void handleInput(Character c);
 
-	public void update(Character c) {
-		// implement for each state individually
-	}
+	abstract public void update(Character c);
 
 	public void setFlags(Character c) {
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && !KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))

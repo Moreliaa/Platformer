@@ -8,6 +8,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
+import data.EffectAfterimage;
+import data.Texture;
 import helpers.KeyboardHandler;
 
 public class StateBoosting extends CharacterState {
@@ -50,6 +52,9 @@ public class StateBoosting extends CharacterState {
 		c.ySpeed = yDir * getBoostSpeed();
 
 		c.getCamera().shake(6, 15);
+		EffectAfterimage e = new EffectAfterimage(c, new Texture("mm001", 158, 158), 3, 2, 5);
+		data.Game.addNewEffect(e);
+
 	}
 
 	/**
