@@ -4,14 +4,9 @@ import static helpers.Clock.delta;
 import static helpers.Graphics.drawLineLoop;
 import static helpers.Graphics.drawQuadTex;
 import static helpers.Graphics.drawQuadTexFlipHorizontal;
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.checkCollision;
-
-import java.util.ArrayList;
 
 import data.Camera;
 import data.Texture;
-import data.Tile;
 import data.TileGrid;
 
 public class Character {
@@ -32,7 +27,7 @@ public class Character {
 	States state;
 	boolean facingRight; // returns true while the character is facing to the right
 
-	boolean jumpDisabled, boostDisabled;
+	boolean jumpDisabled, wallJumpDisabled, boostDisabled;
 
 	int boostsPerJump, boostsLeft;
 
@@ -59,6 +54,7 @@ public class Character {
 		this.facingRight = true;
 
 		this.jumpDisabled = true;
+		this.wallJumpDisabled = true;
 		this.boostDisabled = false;
 
 		this.boostsPerJump = 2;
@@ -75,123 +71,14 @@ public class Character {
 		state.s.update(this);
 
 		x += xSpeed * delta() * 60;
-		handleCollisionX();
+		state.s.handleCollisionX(this, grid);
 
 		y += ySpeed * delta() * 60;
-		handleCollisionY();
+		state.s.handleCollisionY(this, grid);
 	}
 
 	public void drawDiagnostics(Camera c) {
 		drawHitbox(c);
-	}
-
-	/**
-	 * Checks for collision in horizontal direction.
-	 */
-	private void handleCollisionX() {
-		ArrayList<Tile> tiles = getClosestSolidTilesX();
-
-		if (tiles.size() > 0) {
-			for (Tile t : tiles) {
-
-				if (checkCollision(x, y, width, height, t)) {
-					if (xSpeed > 0)
-						x = t.getX() - width;
-					if (xSpeed < 0)
-						x = t.getX() + tileSize;
-					xSpeed = 0;
-					break;
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Looks for the nearest solid tiles in horizontal direction relative to the
-	 * character's x and y position that might overlap with the character.
-	 */
-	private ArrayList<Tile> getClosestSolidTilesX() {
-
-		ArrayList<Tile> tiles = new ArrayList<Tile>();
-
-		int xCoord = (int) Math.floor(x / tileSize);
-		int yCoord = (int) Math.floor(y / tileSize);
-
-		for (int i = yCoord; i <= yCoord + Math.floor(height / tileSize) + 1 && i < grid.getMapHeight(); i++) {
-
-			for (int j = xCoord; j <= xCoord + Math.floor((width / tileSize)) + 1 && j < grid.getMapWidth(); j++) {
-				if (grid.getTile(j, i).isSolid()) {
-					tiles.add(grid.getTile(j, i));
-					break; // step to the next y coordinate
-				}
-			}
-
-		}
-
-		return tiles;
-	}
-
-	/**
-	 * Checks for collision in vertical direction.
-	 */
-	private void handleCollisionY() {
-		ArrayList<Tile> tiles = getClosestSolidTilesY();
-		boolean collision = false;
-
-		if (tiles.size() == 0) {
-			state.s.enterNewState(this, States.Jumping);
-		} else {
-
-			for (Tile t : tiles) {
-
-				if (checkCollision(x, y, width, height, t)) {
-
-					if (ySpeed > 0) { // character landed on a platform
-						y = t.getY() - height;
-						if (state == States.Jumping)
-							state.s.enterNewState(this, States.Standing);
-					}
-					if (ySpeed < 0) { // character hit a ceiling
-						y = t.getY() + tileSize;
-						jumpDisabled = true;
-					}
-					ySpeed = 0;
-					collision = true;
-					break;
-				}
-
-			}
-
-			if (!collision) { // character didn't collide with anything
-				state.s.enterNewState(this, States.Jumping);
-			}
-		}
-	}
-
-	/**
-	 * Looks for the nearest solid tiles in vertical direction relative to the
-	 * character's x and y position that might overlap with the character.
-	 */
-	private ArrayList<Tile> getClosestSolidTilesY() {
-
-		ArrayList<Tile> tiles = new ArrayList<Tile>();
-
-		int xCoord = (int) Math.floor(x / tileSize);
-		int yCoord = (int) Math.floor(y / tileSize);
-
-		for (int i = xCoord; i <= xCoord + Math.floor((width / tileSize)) + 1 && i < grid.getMapWidth(); i++) {
-
-			for (int j = yCoord; j <= yCoord + Math.floor((height / tileSize)) + 1 && j < grid.getMapHeight(); j++) {
-				if (grid.getTile(i, j).isSolid()) {
-					tiles.add(grid.getTile(i, j));
-					break; // step to the next x coordinate
-				}
-			}
-
-		}
-
-		return tiles;
 	}
 
 	public void draw(Camera c) {
