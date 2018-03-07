@@ -161,11 +161,15 @@ public class Character {
 						ySlope = t.getType().getyCoordSlopeL()
 								+ (t.getType().getyCoordSlopeR() - t.getType().getyCoordSlopeL()) * xTile;
 
-						y = t.getY() - height + ySlope;
+						float yNew = t.getY() - height + ySlope;
+
+						if (yNew - y < 10)
+							y = yNew;
+
 						if (state == States.Jumping)
 							state.s.enterNewState(this, States.Standing);
 					}
-					if (ySpeed < 0 && y + height > t.getY() + tileSize) { // character hit a ceiling
+					if (ySpeed < 0) { // character hit a ceiling
 						y = t.getY() + tileSize;
 						jumpDisabled = true;
 					}
