@@ -95,12 +95,14 @@ public class Character {
 			for (Tile t : tiles) {
 
 				if (checkCollision(x, y, width, height, t)) {
-					if (xSpeed > 0)
-						x = t.getX() - width;
-					if (xSpeed < 0)
-						x = t.getX() + tileSize;
-					xSpeed = 0;
-					break;
+					if (t.getType().getyCoordSlopeL() == 0 && t.getType().getyCoordSlopeR() == 0) {
+						if (xSpeed > 0)
+							x = t.getX() - width;
+						if (xSpeed < 0)
+							x = t.getX() + tileSize;
+						xSpeed = 0;
+						break;
+					}
 				}
 			}
 		}
@@ -145,14 +147,25 @@ public class Character {
 
 			for (Tile t : tiles) {
 
-				if (checkCollision(x, y, width, height, t)) {
+				if (checkCollision(x, y, width, height, t) || t.getType().getyCoordSlopeL() != 0
+						|| t.getType().getyCoordSlopeR() != 0) {
 
 					if (ySpeed > 0) { // character landed on a platform
-						y = t.getY() - height;
+						float xTile, ySlope;
+						if (x >= t.getX()) { // bottom-left corner of char intersects
+							xTile = (float) Math.floorMod((int) x, tileSize) / tileSize;
+						} else { // bottom-right corner of char intersects
+							xTile = (float) Math.floorMod((int) x + width, tileSize) / tileSize;
+						}
+
+						ySlope = t.getType().getyCoordSlopeL()
+								+ (t.getType().getyCoordSlopeR() - t.getType().getyCoordSlopeL()) * xTile;
+
+						y = t.getY() - height + ySlope;
 						if (state == States.Jumping)
 							state.s.enterNewState(this, States.Standing);
 					}
-					if (ySpeed < 0) { // character hit a ceiling
+					if (ySpeed < 0 && y + height > t.getY() + tileSize) { // character hit a ceiling
 						y = t.getY() + tileSize;
 						jumpDisabled = true;
 					}
