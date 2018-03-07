@@ -3,6 +3,8 @@ package data;
 import static helpers.Graphics.tileSize;
 import static helpers.LevelManager.loadMap;
 import static helpers.LevelManager.saveMap;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
@@ -17,17 +19,23 @@ public class Editor {
 	private TileGrid grid;
 	private Camera camera;
 	private int cameraSpeed;
+	private TileType[] types;
+	private int index;
 
 	public Editor(String fileName) {
 		grid = loadMap(fileName);
 		camera = new Camera(grid);
 		cameraSpeed = 100;
+		types = TileType.values();
+		index = 0;
 	}
 
 	public Editor(int[][] map) {
 		grid = new TileGrid(map);
 		camera = new Camera(grid);
 		cameraSpeed = 100;
+		types = TileType.values();
+		index = 0;
 	}
 
 	public void update() {
@@ -38,7 +46,7 @@ public class Editor {
 
 	private void handleInput() {
 		if (MouseHandler.isButtonDown(0))
-			setTile(TileType.Block);
+			setTile(types[index]);
 		if (MouseHandler.isButtonDown(1))
 			setTile(TileType.Background);
 
@@ -51,8 +59,24 @@ public class Editor {
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_DOWN) && !KeyboardHandler.isKeyDown(GLFW_KEY_UP))
 			camera.move(0, cameraSpeed);
 
-		if (KeyboardHandler.isKeyDown(GLFW_KEY_S))
+		if (KeyboardHandler.wasKeyReleased(GLFW_KEY_A)) {
+			moveIndex(-1);
+		}
+		if (KeyboardHandler.wasKeyReleased(GLFW_KEY_D))
+			moveIndex(1);
+		if (KeyboardHandler.wasKeyReleased(GLFW_KEY_S))
 			saveMap("map", grid);
+
+	}
+
+	private void moveIndex(int i) {
+		index += i;
+
+		if (index >= types.length)
+			index = 0;
+		if (index < 0)
+			index = types.length - 1;
+
 	}
 
 	private void setTile(TileType type) {
