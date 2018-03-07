@@ -65,18 +65,20 @@ public abstract class CharacterState {
 			for (Tile t : tiles) {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
-					if (c.xSpeed > 0) {
-						c.x = t.getX() - c.width;
-						if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && c.ySpeed > 0)
-							c.state.s.enterNewState(c, States.WallCling);
+					if (t.getType().getyCoordSlopeL() == 0 && t.getType().getyCoordSlopeR() == 0) {
+						if (c.xSpeed > 0) {
+							c.x = t.getX() - c.width;
+							if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
+						}
+						if (c.xSpeed < 0) {
+							c.x = t.getX() + tileSize;
+							if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_LEFT) && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
+						}
+						c.xSpeed = 0;
+						break;
 					}
-					if (c.xSpeed < 0) {
-						c.x = t.getX() + tileSize;
-						if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_LEFT) && c.ySpeed > 0)
-							c.state.s.enterNewState(c, States.WallCling);
-					}
-					c.xSpeed = 0;
-					break;
 				}
 			}
 		}
@@ -121,10 +123,24 @@ public abstract class CharacterState {
 
 			for (Tile t : tiles) {
 
-				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
+				if (checkCollision(c.x, c.y, c.width, c.height, t) || t.getType().getyCoordSlopeL() != 0
+						|| t.getType().getyCoordSlopeR() != 0) {
 
 					if (c.ySpeed > 0) { // character landed on a platform
-						c.y = t.getY() - c.height;
+						float xTile, ySlope;
+						if (c.x >= t.getX()) { // bottom-left corner of char intersects
+							xTile = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+						} else { // bottom-right corner of char intersects
+							xTile = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+						}
+
+						ySlope = t.getType().getyCoordSlopeL()
+								+ (t.getType().getyCoordSlopeR() - t.getType().getyCoordSlopeL()) * xTile;
+
+						float yNew = t.getY() - c.height + ySlope;
+
+						c.y = yNew;
+
 						if (c.state == States.Jumping || c.state == States.WallCling)
 							c.state.s.enterNewState(c, States.Standing);
 					}
