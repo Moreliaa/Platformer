@@ -4,14 +4,9 @@ import static helpers.Clock.delta;
 import static helpers.Graphics.drawLineLoop;
 import static helpers.Graphics.drawQuadTex;
 import static helpers.Graphics.drawQuadTexFlipHorizontal;
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.checkCollision;
-
-import java.util.ArrayList;
 
 import data.Camera;
 import data.Texture;
-import data.Tile;
 import data.TileGrid;
 
 public class Character {
@@ -32,7 +27,7 @@ public class Character {
 	States state;
 	boolean facingRight; // returns true while the character is facing to the right
 
-	boolean jumpDisabled, boostDisabled;
+	boolean jumpDisabled, wallJumpDisabled, boostDisabled;
 
 	int boostsPerJump, boostsLeft;
 
@@ -59,6 +54,7 @@ public class Character {
 		this.facingRight = true;
 
 		this.jumpDisabled = true;
+		this.wallJumpDisabled = true;
 		this.boostDisabled = false;
 
 		this.boostsPerJump = 2;
@@ -75,10 +71,10 @@ public class Character {
 		state.s.update(this);
 
 		x += xSpeed * delta() * 60;
-		handleCollisionX();
+		state.s.handleCollisionX(this, grid);
 
 		y += ySpeed * delta() * 60;
-		handleCollisionY();
+		state.s.handleCollisionY(this, grid);
 	}
 
 	public void drawDiagnostics(Camera c) {
