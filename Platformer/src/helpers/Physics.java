@@ -23,12 +23,7 @@ public class Physics {
 	 * tile, otherwise false.
 	 */
 	public static boolean checkCollision(float x1, float y1, int width1, int height1, Tile t) {
-
-		int ySlopeL = t.getType().getyCoordSlopeL();
-		int ySlopeR = t.getType().getyCoordSlopeR();
-
-		if (x1 + width1 > t.getX() && x1 < t.getX() + tileSize && y1 < t.getY() + tileSize
-				&& (y1 + height1 > t.getY() + ySlopeL || y1 + height1 > t.getY() + ySlopeR))
+		if (x1 + width1 > t.getX() && x1 < t.getX() + tileSize && y1 < t.getY() + tileSize && y1 + height1 > t.getY())
 			return true;
 		return false;
 	}

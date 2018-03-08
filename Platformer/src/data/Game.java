@@ -2,10 +2,14 @@ package data;
 
 import static helpers.Graphics.tileSize;
 import static helpers.LevelManager.loadMap;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 
 import java.util.ArrayList;
 
 import character.Character;
+import helpers.KeyboardHandler;
+import helpers.StateManager;
+import helpers.StateManager.GameState;
 
 public class Game {
 
@@ -30,12 +34,18 @@ public class Game {
 	}
 
 	public void update() {
+		handleInput();
 		character.update();
 		camera.centerOn(character);
 		grid.draw(camera);
 		drawEffects();
 		character.draw(camera);
 		character.drawDiagnostics(camera);
+	}
+
+	private void handleInput() {
+		if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
+			StateManager.setGameState(GameState.MAINMENU);
 	}
 
 	public static void addNewEffect(Effect e) {

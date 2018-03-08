@@ -6,6 +6,7 @@ import static helpers.LevelManager.saveMap;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
@@ -13,6 +14,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 import helpers.KeyboardHandler;
 import helpers.MouseHandler;
+import helpers.StateManager;
+import helpers.StateManager.GameState;
 
 public class Editor {
 
@@ -58,6 +61,8 @@ public class Editor {
 			camera.move(0, -cameraSpeed);
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_DOWN) && !KeyboardHandler.isKeyDown(GLFW_KEY_UP))
 			camera.move(0, cameraSpeed);
+		if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
+			StateManager.setGameState(GameState.MAINMENU);
 
 		if (KeyboardHandler.wasKeyReleased(GLFW_KEY_A)) {
 			moveIndex(-1);
