@@ -151,46 +151,49 @@ public class StateStanding extends CharacterState {
 			c.state.s.enterNewState(c, States.Jumping);
 		} else {
 
-			float ySlope = tileSize;
+			float yNew = c.getY();
 
 			for (Tile t : tiles) {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
 
-					float xTile;
+					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
+										// current tile. A value of 0 represents the left edge of the tile, a value of 1
+										// the right edge.
 					float ySlopeL = t.getType().getyCoordSlopeL();
 					float ySlopeR = t.getType().getyCoordSlopeR();
 
+					// set the local x coordinate
 					if (c.x >= t.getX()) { // bottom-left corner of char intersects
 						if (ySlopeL < ySlopeR)
-							xTile = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+							xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
 						else
-							xTile = 1;
+							xCoordLocal = 1;
 					} else { // bottom-right corner of char intersects
 						if (ySlopeL < ySlopeR)
-							xTile = 0;
+							xCoordLocal = 0;
 						else if (c.x + c.width <= t.getX() + tileSize)
-							xTile = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+							xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
 						else
-							xTile = 1;
-
+							xCoordLocal = 1;
 					}
 
-					float ySlopeNew = ySlopeL + (ySlopeR - ySlopeL) * xTile;
+					// calculate the y position of the slope at the intersecting point
+					float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
-					if (ySlopeNew < ySlope) {
-						ySlope = ySlopeNew;
+					if (yLocal < yNew) {
+						yNew = yLocal;
+						c.ySpeed = 0;
 					}
 
-					c.y = t.getY() - c.height + ySlope;
-
-					c.ySpeed = 0;
 					collision = true;
 				}
 
 			}
 
-			if (!collision) { // character didn't collide with anything
+			if (collision) {
+				c.y = yNew;
+			} else { // character didn't collide with anything
 				c.state.s.enterNewState(c, States.Jumping);
 			}
 		}
