@@ -15,7 +15,7 @@ import helpers.KeyboardHandler;
 public class StateBoosting extends CharacterState {
 
 	private float duration; // iterator for the boost duration, used to exit boost state
-	private int xDir, yDir; // unit vectors for the boost direction
+	private float xDir, yDir; // unit vectors for the boost direction
 
 	@Override
 	public void enter(Character c) {
@@ -50,6 +50,11 @@ public class StateBoosting extends CharacterState {
 
 		c.xSpeed = xDir * getBoostSpeed();
 		c.ySpeed = yDir * getBoostSpeed();
+
+		if (xDir != 0 && yDir != 0) {
+			c.xSpeed *= Math.abs(Math.cos(45 * 180 / Math.PI));
+			c.ySpeed *= Math.abs(Math.cos(45 * 180 / Math.PI));
+		}
 
 		c.getCamera().shake(6, 15);
 		EffectAfterimage e = new EffectAfterimage(c, new Texture("mm001", 158, 158), 3, 2, 5);
