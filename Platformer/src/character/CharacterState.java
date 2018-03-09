@@ -62,48 +62,68 @@ public abstract class CharacterState {
 		ArrayList<Tile> tiles = getClosestSolidTilesX(c, grid);
 
 		if (tiles.size() > 0) {
+
 			for (Tile t : tiles) {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
+
 					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
 					// current tile. A value of 0 represents the left edge of the tile, a value of 1
 					// the right edge.
 					float ySlopeL = t.getType().getyCoordSlopeL();
 					float ySlopeR = t.getType().getyCoordSlopeR();
 
-					// set the local x coordinate
-					if (c.x >= t.getX()) { // bottom-left corner of char intersects
-						if (ySlopeL < ySlopeR)
-							xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
-						else
-							xCoordLocal = 1;
-					} else { // bottom-right corner of char intersects
-						if (ySlopeL < ySlopeR)
-							xCoordLocal = 0;
-						else if (c.x + c.width <= t.getX() + tileSize)
-							xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
-						else
-							xCoordLocal = 1;
+					if (ySlopeL == 0 && ySlopeR == 0) { // fully solid tile
+						if (c.xSpeed > 0) {
+							// entering tile from left
+							c.x = t.getX() - c.width;
+							c.xSpeed = 0;
+							break;
+						}
+						if (c.xSpeed < 0) {
+							// entering tile from right
+							c.x = t.getX() + tileSize;
+							c.xSpeed = 0;
+							break;
+						}
+
+					} else { // slope tile
+
+						// set the local x coordinate
+						if (c.x >= t.getX()) { // bottom-left corner of char intersects
+							if (ySlopeL < ySlopeR)
+								xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+							else
+								xCoordLocal = 1;
+						} else { // bottom-right corner of char intersects
+							if (ySlopeL < ySlopeR)
+								xCoordLocal = 0;
+							else if (c.x + c.width <= t.getX() + tileSize)
+								xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+							else
+								xCoordLocal = 1;
+						}
+
+						// calculate the y position of the character at the intersecting point
+						float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
+
+						float yThreshold = c.y + c.ySpeed * delta() * 60; // minimum height difference before collision
+																			// is
+																			// considered
+
+						if (c.xSpeed > 0 && yLocal < yThreshold) {
+							// entering tile from left
+							c.x = t.getX() - c.width;
+							c.xSpeed = 0;
+							break;
+						}
+						if (c.xSpeed < 0 && yLocal < yThreshold) {
+							// entering tile from right
+							c.x = t.getX() + tileSize;
+							c.xSpeed = 0;
+							break;
+						}
 					}
-
-					// calculate the y position of the character at the intersecting point
-					float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
-
-					float yThreshold = c.y; // minimum height difference before collision is considered
-
-					if (c.xSpeed > 0 && yLocal < yThreshold) {
-						// entering tile from left
-						c.x = t.getX() - c.width;
-						c.xSpeed = 0;
-						break;
-					}
-					if (c.xSpeed < 0 && yLocal < yThreshold) {
-						// entering tile from right
-						c.x = t.getX() + tileSize;
-						c.xSpeed = 0;
-						break;
-					}
-
 				}
 			}
 		}
@@ -151,6 +171,7 @@ public abstract class CharacterState {
 			for (Tile t : tiles) {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
+					collision = true;
 
 					if (c.ySpeed > 0) { // character landed on a platform
 
@@ -188,17 +209,19 @@ public abstract class CharacterState {
 					}
 
 					if (c.ySpeed < 0 && c.getY() > t.getY()) { // character hit a ceiling
-						c.y = t.getY() + tileSize;
+						yNew = t.getY() + tileSize;
 						c.jumpDisabled = true;
 						c.ySpeed = 0;
+						break;
 					}
 
-					collision = true;
 				}
 
 			}
 
-			if (!collision) { // character didn't collide with anything
+			if (collision) {
+				c.y = yNew;
+			} else { // character didn't collide with anything
 				c.state.s.enterNewState(c, States.Jumping);
 			}
 		}
