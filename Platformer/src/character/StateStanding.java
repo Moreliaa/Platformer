@@ -124,12 +124,18 @@ public class StateStanding extends CharacterState {
 						// entering tile from left
 						c.x = t.getX() - c.width;
 						c.xSpeed = 0;
+						c.framesHeldLeft = 0;
+						c.framesHeldRight = 0;
+						c.dashActive = false;
 						break;
 					}
 					if (c.xSpeed < 0 && t.getY() + t.getType().getyCoordSlopeR() < yThreshold) {
 						// entering tile from right
 						c.x = t.getX() + tileSize;
 						c.xSpeed = 0;
+						c.framesHeldLeft = 0;
+						c.framesHeldRight = 0;
+						c.dashActive = false;
 						break;
 					}
 

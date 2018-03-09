@@ -16,6 +16,10 @@ public class StateJumping extends CharacterState {
 	 */
 	@Override
 	public void enter(Character c) {
+		if (!c.dashActive) {
+			c.framesHeldLeft = 0;
+			c.framesHeldRight = 0;
+		}
 
 	}
 

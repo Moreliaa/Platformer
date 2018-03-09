@@ -57,7 +57,7 @@ public class Character {
 		this.wallJumpDisabled = true;
 		this.boostDisabled = false;
 
-		this.boostsPerJump = 2;
+		this.boostsPerJump = 1;
 		this.boostsLeft = boostsPerJump;
 
 		this.dashActive = false;

@@ -78,12 +78,16 @@ public abstract class CharacterState {
 							// entering tile from left
 							c.x = t.getX() - c.width;
 							c.xSpeed = 0;
+							if (c.state == States.Jumping && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
 							break;
 						}
 						if (c.xSpeed < 0) {
 							// entering tile from right
 							c.x = t.getX() + tileSize;
 							c.xSpeed = 0;
+							if (c.state == States.Jumping && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
 							break;
 						}
 
@@ -115,12 +119,16 @@ public abstract class CharacterState {
 							// entering tile from left
 							c.x = t.getX() - c.width;
 							c.xSpeed = 0;
+							if (c.state == States.Jumping && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
 							break;
 						}
 						if (c.xSpeed < 0 && yLocal < yThreshold) {
 							// entering tile from right
 							c.x = t.getX() + tileSize;
 							c.xSpeed = 0;
+							if (c.state == States.Jumping && c.ySpeed > 0)
+								c.state.s.enterNewState(c, States.WallCling);
 							break;
 						}
 					}
