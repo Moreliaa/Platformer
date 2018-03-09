@@ -14,15 +14,9 @@ public class Camera {
 		x = 0;
 		y = 0;
 
-		xMax = grid.getMapWidth() * tileSize - WIDTH;
-		yMax = grid.getMapHeight() * tileSize - HEIGHT;
+		adjustBounds(grid.getMapWidth() * tileSize - WIDTH, grid.getMapHeight() * tileSize - HEIGHT);
 
 		this.screenShake = null;
-
-		if (xMax < 0)
-			xMax = 0;
-		if (yMax < 0)
-			yMax = 0;
 	}
 
 	public void updatePosition(float x, float y) {
@@ -80,6 +74,19 @@ public class Camera {
 			else
 				this.y += phase;
 		}
+	}
+
+	/**
+	 * Add the specified values to the camera bounds.
+	 */
+	public void adjustBounds(float x, float y) {
+		xMax += x;
+		yMax += y;
+
+		if (xMax < 0)
+			xMax = 0;
+		if (yMax < 0)
+			yMax = 0;
 	}
 
 	public float getX() {

@@ -84,6 +84,26 @@ public class Graphics {
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	public static void drawQuad(float x, float y, int width, int height) {
+
+		glDisable(GL_TEXTURE_2D);
+
+		glBegin(GL_QUADS);
+		glColor3f(0.2f, 0.2f, 0.2f);
+		glTexCoord2f(0, 0);
+		glVertex2f(x, y);
+		glTexCoord2f(1, 0);
+		glVertex2f(x + width, y);
+		glTexCoord2f(1, 1);
+		glVertex2f(x + width, height + y);
+		glTexCoord2f(0, 1);
+		glVertex2f(x, height + y);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glEnd();
+
+		glEnable(GL_TEXTURE_2D);
+	}
+
 	/**
 	 * Draws a texture to the screen.
 	 */

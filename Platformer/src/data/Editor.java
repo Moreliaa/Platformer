@@ -1,5 +1,6 @@
 package data;
 
+import static helpers.Clock.delta;
 import static helpers.Graphics.tileSize;
 import static helpers.LevelManager.loadMap;
 import static helpers.LevelManager.saveMap;
@@ -21,6 +22,7 @@ public class Editor {
 
 	private TileGrid grid;
 	private Camera camera;
+	private EditorTileSelector tileSelector;
 	private int cameraSpeed;
 	private TileType[] types;
 	private int index;
@@ -30,6 +32,8 @@ public class Editor {
 		camera = new Camera(grid);
 		cameraSpeed = 100;
 		types = TileType.values();
+		tileSelector = new EditorTileSelector(types);
+		camera.adjustBounds(tileSelector.getWidth(), 0);
 		index = 0;
 	}
 
@@ -38,29 +42,34 @@ public class Editor {
 		camera = new Camera(grid);
 		cameraSpeed = 100;
 		types = TileType.values();
+		tileSelector = new EditorTileSelector(types);
 		index = 0;
 	}
 
 	public void update() {
-		// TODO Auto-generated method stub
 		handleInput();
 		grid.draw(camera);
+		tileSelector.draw();
 	}
 
 	private void handleInput() {
-		if (MouseHandler.isButtonDown(0))
-			setTile(types[index]);
-		if (MouseHandler.isButtonDown(1))
-			setTile(TileType.Background);
+		if (tileSelector.mouseOver(MouseHandler.getxPos(), MouseHandler.getyPos())) {
+			index = tileSelector.setIndex(index);
+		} else {
+			if (MouseHandler.isButtonDown(0))
+				setTile(types[index]);
+			if (MouseHandler.isButtonDown(1))
+				setTile(TileType.Background);
+		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && !KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
-			camera.move(cameraSpeed, 0);
+			camera.move(cameraSpeed * delta() * 60, 0);
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_LEFT) && !KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))
-			camera.move(-cameraSpeed, 0);
+			camera.move(-cameraSpeed * delta() * 60, 0);
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_UP) && !KeyboardHandler.isKeyDown(GLFW_KEY_DOWN))
-			camera.move(0, -cameraSpeed);
+			camera.move(0, -cameraSpeed * delta() * 60);
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_DOWN) && !KeyboardHandler.isKeyDown(GLFW_KEY_UP))
-			camera.move(0, cameraSpeed);
+			camera.move(0, cameraSpeed * delta() * 60);
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
 			StateManager.setGameState(GameState.MAINMENU);
 
