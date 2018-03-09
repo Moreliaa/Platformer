@@ -65,20 +65,45 @@ public abstract class CharacterState {
 			for (Tile t : tiles) {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
-					if (t.getType().getyCoordSlopeL() == 0 && t.getType().getyCoordSlopeR() == 0) {
-						if (c.xSpeed > 0) {
-							c.x = t.getX() - c.width;
-							if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && c.ySpeed > 0)
-								c.state.s.enterNewState(c, States.WallCling);
-						}
-						if (c.xSpeed < 0) {
-							c.x = t.getX() + tileSize;
-							if (c.state == States.Jumping && KeyboardHandler.isKeyDown(GLFW_KEY_LEFT) && c.ySpeed > 0)
-								c.state.s.enterNewState(c, States.WallCling);
-						}
+					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
+					// current tile. A value of 0 represents the left edge of the tile, a value of 1
+					// the right edge.
+					float ySlopeL = t.getType().getyCoordSlopeL();
+					float ySlopeR = t.getType().getyCoordSlopeR();
+
+					// set the local x coordinate
+					if (c.x >= t.getX()) { // bottom-left corner of char intersects
+						if (ySlopeL < ySlopeR)
+							xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+						else
+							xCoordLocal = 1;
+					} else { // bottom-right corner of char intersects
+						if (ySlopeL < ySlopeR)
+							xCoordLocal = 0;
+						else if (c.x + c.width <= t.getX() + tileSize)
+							xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+						else
+							xCoordLocal = 1;
+					}
+
+					// calculate the y position of the character at the intersecting point
+					float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
+
+					float yThreshold = c.y; // minimum height difference before collision is considered
+
+					if (c.xSpeed > 0 && yLocal < yThreshold) {
+						// entering tile from left
+						c.x = t.getX() - c.width;
 						c.xSpeed = 0;
 						break;
 					}
+					if (c.xSpeed < 0 && yLocal < yThreshold) {
+						// entering tile from right
+						c.x = t.getX() + tileSize;
+						c.xSpeed = 0;
+						break;
+					}
+
 				}
 			}
 		}
@@ -121,36 +146,54 @@ public abstract class CharacterState {
 			c.state.s.enterNewState(c, States.Jumping);
 		} else {
 
+			float yNew = c.getY();
+
 			for (Tile t : tiles) {
 
-				if (checkCollision(c.x, c.y, c.width, c.height, t) || t.getType().getyCoordSlopeL() != 0
-						|| t.getType().getyCoordSlopeR() != 0) {
+				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
 
 					if (c.ySpeed > 0) { // character landed on a platform
-						float xTile, ySlope;
+
+						float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
+						// current tile. A value of 0 represents the left edge of the tile, a value of 1
+						// the right edge.
+						float ySlopeL = t.getType().getyCoordSlopeL();
+						float ySlopeR = t.getType().getyCoordSlopeR();
+
+						// set the local x coordinate
 						if (c.x >= t.getX()) { // bottom-left corner of char intersects
-							xTile = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+							if (ySlopeL < ySlopeR)
+								xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
+							else
+								xCoordLocal = 1;
 						} else { // bottom-right corner of char intersects
-							xTile = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+							if (ySlopeL < ySlopeR)
+								xCoordLocal = 0;
+							else if (c.x + c.width <= t.getX() + tileSize)
+								xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
+							else
+								xCoordLocal = 1;
 						}
 
-						ySlope = t.getType().getyCoordSlopeL()
-								+ (t.getType().getyCoordSlopeR() - t.getType().getyCoordSlopeL()) * xTile;
+						// calculate the y position of the slope at the intersecting point
+						float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
-						float yNew = t.getY() - c.height + ySlope;
-
-						c.y = yNew;
+						if (yLocal < yNew) {
+							yNew = yLocal;
+							c.ySpeed = 0;
+						}
 
 						if (c.state == States.Jumping || c.state == States.WallCling)
 							c.state.s.enterNewState(c, States.Standing);
 					}
-					if (c.ySpeed < 0) { // character hit a ceiling
+
+					if (c.ySpeed < 0 && c.getY() > t.getY()) { // character hit a ceiling
 						c.y = t.getY() + tileSize;
 						c.jumpDisabled = true;
+						c.ySpeed = 0;
 					}
-					c.ySpeed = 0;
+
 					collision = true;
-					break;
 				}
 
 			}

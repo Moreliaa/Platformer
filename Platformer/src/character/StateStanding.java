@@ -178,7 +178,7 @@ public class StateStanding extends CharacterState {
 							xCoordLocal = 1;
 					}
 
-					// calculate the y position of the slope at the intersecting point
+					// calculate the y position of the character at the intersecting point
 					float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
 					if (yLocal < yNew) {
