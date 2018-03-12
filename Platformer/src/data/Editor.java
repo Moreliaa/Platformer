@@ -53,7 +53,7 @@ public class Editor {
 	}
 
 	private void handleInput() {
-		if (tileSelector.mouseOver(MouseHandler.getxPos(), MouseHandler.getyPos())) {
+		if (MouseHandler.isButtonDown(0) && tileSelector.mouseOver(MouseHandler.getxPos(), MouseHandler.getyPos())) {
 			index = tileSelector.setIndex(index);
 		} else {
 			if (MouseHandler.isButtonDown(0))

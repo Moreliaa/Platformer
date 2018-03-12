@@ -7,6 +7,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import java.util.ArrayList;
 
 import character.Character;
+import enemy.Wheel;
 import helpers.KeyboardHandler;
 import helpers.StateManager;
 import helpers.StateManager.GameState;
@@ -16,6 +17,7 @@ public class Game {
 	private TileGrid grid;
 	private Camera camera;
 	private Character character;
+	private ArrayList<Entity> entities;
 	private static ArrayList<Effect> effects;
 
 	public Game(int[][] map) {
@@ -23,6 +25,8 @@ public class Game {
 		this.camera = new Camera(grid);
 		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		effects = new ArrayList<Effect>();
+		entities = new ArrayList<Entity>();
+		entities.add(new Wheel(grid, camera, 5 * tileSize, 4 * tileSize));
 
 	}
 
@@ -31,16 +35,44 @@ public class Game {
 		this.camera = new Camera(grid);
 		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		effects = new ArrayList<Effect>();
+		entities = new ArrayList<Entity>();
+		entities.add(new Wheel(grid, camera, 5 * tileSize, 4 * tileSize));
 	}
 
 	public void update() {
 		handleInput();
+		updateEntities();
 		character.update();
 		camera.centerOn(character);
 		grid.draw(camera);
 		drawEffects();
+		drawEntities();
 		character.draw(camera);
+		drawDiagnostics();
+
+	}
+
+	private void drawDiagnostics() {
 		character.drawDiagnostics(camera);
+
+		for (Entity e : entities) {
+			e.drawHitbox(camera);
+		}
+
+	}
+
+	private void updateEntities() {
+		for (Entity e : entities) {
+			e.update();
+		}
+
+	}
+
+	private void drawEntities() {
+		for (Entity e : entities) {
+			e.draw(camera);
+		}
+
 	}
 
 	private void handleInput() {
