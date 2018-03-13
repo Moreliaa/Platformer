@@ -13,14 +13,15 @@ public enum TileType {
 	Texture texture;
 	boolean solid; // solid tiles cannot be passed through by entities
 	String id;
-	int yCoordSlopeL, yCoordSlopeR;
+	int yFloorL, yFloorR; // distance (in pixels) of the first solid pixel counted from the top of the
+							// tile on the left and right edge respectively
 
-	TileType(String textureName, boolean solid, String id, int yCoordSlopeL, int yCoordSlopeR) {
+	TileType(String textureName, boolean solid, String id, int yFloorL, int yFloorR) {
 		this.texture = new Texture(textureName, (int) tileSize, (int) tileSize);
 		this.solid = solid;
 		this.id = id;
-		this.yCoordSlopeL = yCoordSlopeL;
-		this.yCoordSlopeR = yCoordSlopeR;
+		this.yFloorL = yFloorL;
+		this.yFloorR = yFloorR;
 
 	}
 
@@ -28,12 +29,12 @@ public enum TileType {
 		return id;
 	}
 
-	public int getyCoordSlopeL() {
-		return yCoordSlopeL;
+	public int getyFloorL() {
+		return yFloorL;
 	}
 
-	public int getyCoordSlopeR() {
-		return yCoordSlopeR;
+	public int getyFloorR() {
+		return yFloorR;
 	}
 
 }

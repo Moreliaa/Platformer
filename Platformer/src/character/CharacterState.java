@@ -70,8 +70,8 @@ public abstract class CharacterState {
 					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
 					// current tile. A value of 0 represents the left edge of the tile, a value of 1
 					// the right edge.
-					float ySlopeL = t.getType().getyCoordSlopeL();
-					float ySlopeR = t.getType().getyCoordSlopeR();
+					float ySlopeL = t.getType().getyFloorL();
+					float ySlopeR = t.getType().getyFloorR();
 
 					if (ySlopeL == 0 && ySlopeR == 0) { // fully solid tile
 						if (c.xSpeed > 0) {
@@ -109,13 +109,13 @@ public abstract class CharacterState {
 						}
 
 						// calculate the y position of the character at the intersecting point
-						float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
+						float yNew = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
 						float yThreshold = c.y; // minimum height difference before collision
 												// is
 												// considered
 
-						if (c.xSpeed > 0 && yLocal < yThreshold) {
+						if (c.xSpeed > 0 && yNew < yThreshold) {
 							// entering tile from left
 							c.x = t.getX() - c.width;
 							c.xSpeed = 0;
@@ -123,7 +123,7 @@ public abstract class CharacterState {
 								c.state.s.enterNewState(c, States.WallCling);
 							break;
 						}
-						if (c.xSpeed < 0 && yLocal < yThreshold) {
+						if (c.xSpeed < 0 && yNew < yThreshold) {
 							// entering tile from right
 							c.x = t.getX() + tileSize;
 							c.xSpeed = 0;
@@ -186,8 +186,8 @@ public abstract class CharacterState {
 						float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
 						// current tile. A value of 0 represents the left edge of the tile, a value of 1
 						// the right edge.
-						float ySlopeL = t.getType().getyCoordSlopeL();
-						float ySlopeR = t.getType().getyCoordSlopeR();
+						float ySlopeL = t.getType().getyFloorL();
+						float ySlopeR = t.getType().getyFloorR();
 
 						// set the local x coordinate
 						if (c.x >= t.getX()) { // bottom-left corner of char intersects

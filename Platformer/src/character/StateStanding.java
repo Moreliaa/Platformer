@@ -120,7 +120,7 @@ public class StateStanding extends CharacterState {
 
 				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
 					float yThreshold = c.y + c.height - 32; // minimum height difference before collision is considered
-					if (c.xSpeed > 0 && t.getY() + t.getType().getyCoordSlopeL() < yThreshold) {
+					if (c.xSpeed > 0 && t.getY() + t.getType().getyFloorL() < yThreshold) {
 						// entering tile from left
 						c.x = t.getX() - c.width;
 						c.xSpeed = 0;
@@ -129,7 +129,7 @@ public class StateStanding extends CharacterState {
 						c.dashActive = false;
 						break;
 					}
-					if (c.xSpeed < 0 && t.getY() + t.getType().getyCoordSlopeR() < yThreshold) {
+					if (c.xSpeed < 0 && t.getY() + t.getType().getyFloorR() < yThreshold) {
 						// entering tile from right
 						c.x = t.getX() + tileSize;
 						c.xSpeed = 0;
@@ -166,8 +166,8 @@ public class StateStanding extends CharacterState {
 					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
 										// current tile. A value of 0 represents the left edge of the tile, a value of 1
 										// the right edge.
-					float ySlopeL = t.getType().getyCoordSlopeL();
-					float ySlopeR = t.getType().getyCoordSlopeR();
+					float ySlopeL = t.getType().getyFloorL();
+					float ySlopeR = t.getType().getyFloorR();
 
 					// set the local x coordinate
 					if (c.x >= t.getX()) { // bottom-left corner of char intersects
