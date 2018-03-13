@@ -145,8 +145,8 @@ public abstract class Enemy implements Entity {
 						// calculate the y position of the character at the intersecting point
 						float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
-						float yThreshold = c.y + c.ySpeed * delta() * 60 - 32; // minimum height difference
-																				// before collision
+						float yThreshold = c.y; // minimum height difference
+												// before collision
 						// is
 						// considered
 

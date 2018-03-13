@@ -111,9 +111,9 @@ public abstract class CharacterState {
 						// calculate the y position of the character at the intersecting point
 						float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
 
-						float yThreshold = c.y + c.ySpeed * delta() * 60; // minimum height difference before collision
-																			// is
-																			// considered
+						float yThreshold = c.y; // minimum height difference before collision
+												// is
+												// considered
 
 						if (c.xSpeed > 0 && yLocal < yThreshold) {
 							// entering tile from left
