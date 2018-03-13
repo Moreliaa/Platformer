@@ -1,11 +1,9 @@
 package character;
 
-import static helpers.Clock.delta;
 import static helpers.Graphics.drawLineLoop;
 import static helpers.Graphics.drawQuadTex;
 import static helpers.Graphics.drawQuadTexFlipHorizontal;
 import static helpers.Graphics.tileSize;
-import static helpers.Physics.stepX;
 
 import data.Camera;
 import data.Entity;
@@ -76,10 +74,12 @@ public class Character implements Entity {
 		/*
 		 * x += xSpeed * delta() * 60; state.s.handleCollisionX(this, grid);
 		 */
-		stepX(this);
-
-		y += ySpeed * delta() * 60;
-		state.s.handleCollisionY(this, grid);
+		/*
+		 * stepX(this); stepY(this);
+		 */
+		/*
+		 * y += ySpeed * delta() * 60; state.s.handleCollisionY(this, grid);
+		 */
 	}
 
 	public void drawDiagnostics(Camera c) {

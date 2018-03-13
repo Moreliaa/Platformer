@@ -386,8 +386,18 @@ public abstract class Enemy implements Entity {
 	}
 
 	@Override
+	public float getySpeed() {
+		return this.ySpeed;
+	}
+
+	@Override
 	public void setX(float xNew) {
 		this.x = xNew;
+	}
+
+	@Override
+	public void setY(float yNew) {
+		this.x = yNew;
 	}
 
 	@Override

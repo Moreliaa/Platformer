@@ -2,6 +2,8 @@ package character;
 
 import static helpers.Graphics.tileSize;
 import static helpers.Physics.checkCollision;
+import static helpers.Physics.stepX;
+import static helpers.Physics.stepY;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
@@ -52,6 +54,17 @@ public class StateStanding extends CharacterState {
 		}
 
 		super.handleGravity(c);
+
+		if (stepX(c)) {
+			c.xSpeed = 0;
+		}
+		if (!stepY(c)) {
+			if (c.ySpeed > 0)
+				enterNewState(c, States.Jumping);
+		} else {
+			c.ySpeed = 0;
+		}
+
 	}
 
 	private void moveRight(Character c) {

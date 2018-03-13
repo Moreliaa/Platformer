@@ -1,6 +1,8 @@
 package character;
 
 import static helpers.Physics.getInitialSmallJumpVelocity;
+import static helpers.Physics.stepX;
+import static helpers.Physics.stepY;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
@@ -68,6 +70,21 @@ public class StateJumping extends CharacterState {
 		if (c.ySpeed > 0) {
 			c.jumpDisabled = true;
 		}
+
+		if (stepX(c)) {
+			c.xSpeed = 0;
+			if (c.ySpeed > 0)
+				enterNewState(c, States.WallCling);
+		}
+
+		if (stepY(c)) {
+			if (c.ySpeed >= 0)
+				enterNewState(c, States.Standing);
+			else
+				c.jumpDisabled = true;
+			c.ySpeed = 0;
+		}
+
 	}
 
 	private void smallJump(Character c) {

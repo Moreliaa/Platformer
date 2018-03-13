@@ -3,6 +3,8 @@ package character;
 import static helpers.Physics.getBoostDuration;
 import static helpers.Physics.getBoostSpeed;
 import static helpers.Physics.getInitialSmallJumpVelocity;
+import static helpers.Physics.stepX;
+import static helpers.Physics.stepY;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
@@ -85,6 +87,8 @@ public class StateBoosting extends CharacterState {
 	public void update(Character c) {
 		// unaffected by gravity or air friction during boost state
 		duration++;
+		stepX(c);
+		stepY(c);
 		enterNewState(c, States.Jumping);
 	}
 

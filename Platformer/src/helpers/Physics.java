@@ -16,7 +16,7 @@ public class Physics {
 	private static float initialJumpVelocity = (-1) * (float) Math.sqrt(2 * gravity * maxJumpHeight);
 	private static float minJumpHeight = 1.5f * tileSize;
 	private static float initialSmallJumpVelocity = setInitialSmallJumpVelocity();
-	private static float maxFallSpeed = 100;
+	private static float maxFallSpeed = 20;
 
 	private static float boostDistance = 5f * tileSize;
 	private static int boostDuration = 10;
@@ -84,6 +84,96 @@ public class Physics {
 
 		e.setX(xNew);
 		return collision;
+	}
+
+	public static boolean stepY(Entity e) {
+		float yNew = e.getY() + e.getySpeed() * delta() * 60;
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
+
+		// Get the y coordinate of the forward-facing edge in the direction of movement
+		int yCoordEdge;
+		if (e.getySpeed() >= 0) {
+			yCoordEdge = e.getyCoordB() + 1;
+
+			if (yCoordEdge > e.getGrid().getMapHeight()) {// OOB
+				e.setY(yNew);
+				return false;
+			}
+		} else {
+			yCoordEdge = e.getyCoord() - 1;
+			if (yCoordEdge < 0) {// OOB
+				e.setY(yNew);
+				return false;
+			}
+		}
+
+		// Check if character is standing on a slope tile
+		if (e.getySpeed() >= 0) {
+			for (int xCoord = e.getxCoord(); xCoord <= e.getxCoordR(); xCoord++) {
+				if (e.getGrid().getTile(xCoord, e.getyCoordB()).getType().getyFloorL() != 0
+						|| e.getGrid().getTile(xCoord, e.getyCoordB()).getType().getyFloorL() != 0)
+					tiles.add(e.getGrid().getTile(xCoord, e.getyCoordB()));
+			}
+		}
+
+		// Get the tiles the entity may intersect with
+		if (tiles.isEmpty()) {
+			for (int xCoord = e.getxCoord(); xCoord <= e.getxCoordR(); xCoord++) {
+				tiles.add(e.getGrid().getTile(xCoord, yCoordEdge));
+			}
+		}
+
+		boolean collision = false;
+
+		// Look for the closest obstacle
+		for (Tile t : tiles) {
+			if (e.getySpeed() >= 0) { // falling
+				if (t.getType().getyFloorL() == 0 && t.getType().getyFloorR() == 0 && yNew + e.getHeight() > t.getY()
+						&& t.isSolid()) {// block
+					yNew = t.getY() - e.getHeight();
+					collision = true;
+				} else if (t.getType().getyFloorL() != 0 || t.getType().getyFloorR() != 0) { // slope
+					float xFloor;
+					// normalized x position of the entity's intersecting corner with the
+					// current tile. A value of 0 represents the left edge of the tile, a value of 1
+					// the right edge.
+					float yFloorL = t.getType().getyFloorL();
+					float yFloorR = t.getType().getyFloorR();
+
+					// set the local x coordinate
+					if (e.getX() >= t.getX()) { // bottom-left corner of char intersects
+						if (yFloorL < yFloorR)
+							xFloor = (float) Math.floorMod((int) e.getX(), tileSize) / tileSize;
+						else
+							xFloor = 1;
+					} else { // bottom-right corner of char intersects
+						if (yFloorL < yFloorR)
+							xFloor = 0;
+						else if (e.getX() + e.getWidth() <= t.getX() + tileSize)
+							xFloor = (float) Math.floorMod((int) e.getX() + e.getWidth(), tileSize) / tileSize;
+						else
+							xFloor = 1;
+					}
+
+					// calculate the y position of the character at the intersecting point
+					float yNewFloor = t.getY() - e.getHeight() + yFloorL + (yFloorR - yFloorL) * xFloor;
+					float yThreshold = 3;
+					if (yNew > yNewFloor - yThreshold) {
+						yNew = yNewFloor;
+						collision = true;
+					}
+				}
+			} else if (yNew < t.getY() + tileSize && t.isSolid()) { // rising
+				yNew = t.getY() + tileSize;
+				collision = true;
+
+			}
+
+		}
+
+		e.setY(yNew);
+		return collision;
+
 	}
 
 	/**

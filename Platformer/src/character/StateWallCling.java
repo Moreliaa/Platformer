@@ -1,6 +1,8 @@
 package character;
 
 import static helpers.Graphics.tileSize;
+import static helpers.Physics.stepX;
+import static helpers.Physics.stepY;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
@@ -80,6 +82,14 @@ public class StateWallCling extends CharacterState {
 
 		if (c.ySpeed > maxSlideSpeed)
 			c.ySpeed = maxSlideSpeed;
+
+		stepX(c);
+
+		if (stepY(c)) {
+			c.ySpeed = 0;
+			enterNewState(c, States.Standing);
+		}
+
 	}
 
 	/**

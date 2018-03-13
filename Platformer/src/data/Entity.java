@@ -29,4 +29,8 @@ public interface Entity {
 	public int getxCoordR();
 
 	public int getyCoordB();
+
+	public float getySpeed();
+
+	public void setY(float yNew);
 }
