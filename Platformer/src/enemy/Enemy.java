@@ -375,4 +375,64 @@ public abstract class Enemy implements Entity {
 		return tiles;
 	}
 
+	@Override
+	public float getX() {
+		return this.x;
+	}
+
+	@Override
+	public float getxSpeed() {
+		return this.xSpeed;
+	}
+
+	@Override
+	public void setX(float xNew) {
+		this.x = xNew;
+	}
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	public TileGrid getGrid() {
+		return grid;
+	}
+
+	@Override
+	public int getyCoord() {
+		return Math.floorDiv((int) y, tileSize);
+	}
+
+	@Override
+	public int getxCoord() {
+		return Math.floorDiv((int) x, tileSize);
+	}
+
+	@Override
+	public int getxCoordR() {
+		double a = x + width;
+		double b = tileSize;
+		double c = Math.ceil(a / b);
+		return (int) c;
+	}
+
+	@Override
+	public int getyCoordB() {
+		double a = y + height;
+		double b = tileSize;
+		double c = Math.ceil(a / b);
+		return (int) c;
+	}
+
 }

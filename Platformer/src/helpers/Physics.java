@@ -1,7 +1,11 @@
 package helpers;
 
+import static helpers.Clock.delta;
 import static helpers.Graphics.tileSize;
 
+import java.util.ArrayList;
+
+import data.Entity;
 import data.Tile;
 
 public class Physics {
@@ -17,6 +21,70 @@ public class Physics {
 	private static float boostDistance = 5f * tileSize;
 	private static int boostDuration = 10;
 	private static float boostSpeed = boostDistance / boostDuration;
+
+	/**
+	 * Step the x coordinate for movement. Returns true if there was a collision,
+	 * otherwise false.
+	 */
+	public static boolean stepX(Entity e) {
+		float xNew = e.getX() + e.getxSpeed() * delta() * 60;
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
+
+		// Get the x coordinate of the forward-facing edge in the direction of movement
+		int xCoordEdge;
+		if (e.getxSpeed() >= 0) {
+			xCoordEdge = e.getxCoordR() + 1;
+
+			if (xCoordEdge > e.getGrid().getMapWidth()) {// OOB
+				e.setX(xNew);
+				return false;
+			}
+		} else {
+			xCoordEdge = e.getxCoord() - 1;
+			if (xCoordEdge < 0) {// OOB
+				e.setX(xNew);
+				return false;
+			}
+		}
+
+		// Get the tiles the entity may intersect with
+		for (int yCoord = e.getyCoord(); yCoord <= e.getyCoordB(); yCoord++) {
+			tiles.add(e.getGrid().getTile(xCoordEdge, yCoord));
+		}
+
+		boolean collision = false;
+		float yThresholdBlock = 0;
+		float yThresholdSlope = 32; // Max height difference that can be stepped over
+		// Look for the closest obstacle
+		for (Tile t : tiles) {
+
+			if (e.getxSpeed() >= 0 && t.getX() - e.getWidth() < xNew && t.isSolid()) {
+
+				if (t.getType().getyFloorL() == 0 && t.getType().getyFloorR() == 0
+						&& e.getY() + e.getHeight() > t.getY() + yThresholdBlock) {// block
+					xNew = t.getX() - e.getWidth();
+					collision = true;
+				} else if (e.getyCoordB() > t.getYCoord()
+						|| e.getY() + e.getHeight() > t.getY() + t.getType().getyFloorL() + yThresholdSlope) {// slope
+					xNew = t.getX() - e.getWidth();
+					collision = true;
+				}
+			} else if (e.getxSpeed() < 0 && t.getX() + tileSize > xNew && t.isSolid())
+				if (t.getType().getyFloorL() == 0 && t.getType().getyFloorR() == 0
+						&& e.getY() + e.getHeight() > t.getY() + yThresholdBlock) {// block
+					xNew = t.getX() + tileSize;
+					collision = true;
+				} else if (e.getyCoordB() > t.getYCoord()
+						|| e.getY() + e.getHeight() > t.getY() + t.getType().getyFloorR() + yThresholdSlope) {// slope
+					xNew = t.getX() + tileSize;
+					collision = true;
+				}
+
+		}
+
+		e.setX(xNew);
+		return collision;
+	}
 
 	/**
 	 * Returns true if the AABB of the given coordinates intersects with the given

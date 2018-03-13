@@ -4,12 +4,15 @@ import static helpers.Clock.delta;
 import static helpers.Graphics.drawLineLoop;
 import static helpers.Graphics.drawQuadTex;
 import static helpers.Graphics.drawQuadTexFlipHorizontal;
+import static helpers.Graphics.tileSize;
+import static helpers.Physics.stepX;
 
 import data.Camera;
+import data.Entity;
 import data.Texture;
 import data.TileGrid;
 
-public class Character {
+public class Character implements Entity {
 
 	private TileGrid grid;
 	private Camera camera;
@@ -70,8 +73,10 @@ public class Character {
 		state.s.handleInput(this);
 		state.s.update(this);
 
-		x += xSpeed * delta() * 60;
-		state.s.handleCollisionX(this, grid);
+		/*
+		 * x += xSpeed * delta() * 60; state.s.handleCollisionX(this, grid);
+		 */
+		stepX(this);
 
 		y += ySpeed * delta() * 60;
 		state.s.handleCollisionY(this, grid);
@@ -102,6 +107,14 @@ public class Character {
 
 	public void setX(float x) {
 		this.x = x;
+	}
+
+	public float getxSpeed() {
+		return xSpeed;
+	}
+
+	public float getySpeed() {
+		return ySpeed;
 	}
 
 	public float getY() {
@@ -153,6 +166,36 @@ public class Character {
 
 	public void setCamera(Camera camera) {
 		this.camera = camera;
+	}
+
+	public TileGrid getGrid() {
+		return grid;
+	}
+
+	@Override
+	public int getyCoord() {
+		return Math.floorDiv((int) y, tileSize);
+	}
+
+	@Override
+	public int getxCoord() {
+		return Math.floorDiv((int) x, tileSize);
+	}
+
+	@Override
+	public int getxCoordR() {
+		if (Math.floorMod((int) (x + width), tileSize) == 0)
+			return Math.floorDiv((int) (x + width), tileSize) - 1;
+		else
+			return Math.floorDiv((int) (x + width), tileSize);
+	}
+
+	@Override
+	public int getyCoordB() {
+		if (Math.floorMod((int) (y + height), tileSize) == 0)
+			return Math.floorDiv((int) (y + height), tileSize) - 1;
+		else
+			return Math.floorDiv((int) (y + height), tileSize);
 	}
 
 }
