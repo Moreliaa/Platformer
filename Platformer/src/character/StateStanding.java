@@ -1,18 +1,12 @@
 package character;
 
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.checkCollision;
 import static helpers.Physics.stepX;
 import static helpers.Physics.stepY;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
-import java.util.ArrayList;
-
 import data.EffectAfterimage;
-import data.Tile;
-import data.TileGrid;
 import helpers.Clock;
 import helpers.KeyboardHandler;
 import helpers.Physics;
@@ -119,103 +113,6 @@ public class StateStanding extends CharacterState {
 		c.dashActive = false;
 
 		c.xSpeed = 0;
-	}
-
-	/**
-	 * Checks for collision in horizontal direction.
-	 */
-	@Override
-	void handleCollisionX(Character c, TileGrid grid) {
-		ArrayList<Tile> tiles = getClosestSolidTilesX(c, grid);
-
-		if (tiles.size() > 0) {
-			for (Tile t : tiles) {
-
-				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
-					float yThreshold = c.y + c.height - 32; // minimum height difference before collision is considered
-					if (c.xSpeed > 0 && t.getY() + t.getType().getyFloorL() < yThreshold) {
-						// entering tile from left
-						c.x = t.getX() - c.width;
-						c.xSpeed = 0;
-						c.framesHeldLeft = 0;
-						c.framesHeldRight = 0;
-						c.dashActive = false;
-						break;
-					}
-					if (c.xSpeed < 0 && t.getY() + t.getType().getyFloorR() < yThreshold) {
-						// entering tile from right
-						c.x = t.getX() + tileSize;
-						c.xSpeed = 0;
-						c.framesHeldLeft = 0;
-						c.framesHeldRight = 0;
-						c.dashActive = false;
-						break;
-					}
-
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Checks for collision in vertical direction.
-	 */
-	@Override
-	void handleCollisionY(Character c, TileGrid grid) {
-		ArrayList<Tile> tiles = getClosestSolidTilesY(c, grid);
-		boolean collision = false;
-
-		if (tiles.size() == 0) {
-			c.state.s.enterNewState(c, States.Jumping);
-		} else {
-
-			float yNew = c.getY();
-
-			for (Tile t : tiles) {
-
-				if (checkCollision(c.x, c.y, c.width, c.height, t)) {
-
-					float xCoordLocal; // normalized x coordinate of the character's intersecting corner with the
-										// current tile. A value of 0 represents the left edge of the tile, a value of 1
-										// the right edge.
-					float ySlopeL = t.getType().getyFloorL();
-					float ySlopeR = t.getType().getyFloorR();
-
-					// set the local x coordinate
-					if (c.x >= t.getX()) { // bottom-left corner of char intersects
-						if (ySlopeL < ySlopeR)
-							xCoordLocal = (float) Math.floorMod((int) c.x, tileSize) / tileSize;
-						else
-							xCoordLocal = 1;
-					} else { // bottom-right corner of char intersects
-						if (ySlopeL < ySlopeR)
-							xCoordLocal = 0;
-						else if (c.x + c.width <= t.getX() + tileSize)
-							xCoordLocal = (float) Math.floorMod((int) c.x + c.width, tileSize) / tileSize;
-						else
-							xCoordLocal = 1;
-					}
-
-					// calculate the y position of the character at the intersecting point
-					float yLocal = t.getY() - c.height + ySlopeL + (ySlopeR - ySlopeL) * xCoordLocal;
-
-					if (yLocal < yNew) {
-						yNew = yLocal;
-						c.ySpeed = 0;
-					}
-
-					collision = true;
-				}
-
-			}
-
-			if (collision) {
-				c.y = yNew;
-			} else { // character didn't collide with anything
-				c.state.s.enterNewState(c, States.Jumping);
-			}
-		}
 	}
 
 }

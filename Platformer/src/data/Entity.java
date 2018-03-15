@@ -8,15 +8,15 @@ public interface Entity {
 
 	public void drawHitbox(Camera c);
 
+	public TileGrid getGrid();
+
 	public float getX();
 
 	public void setX(float xNew);
 
 	public float getY();
 
-	public float getxSpeed();
-
-	public TileGrid getGrid();
+	public void setY(float yNew);
 
 	public int getWidth();
 
@@ -30,7 +30,7 @@ public interface Entity {
 
 	public int getyCoordB();
 
-	public float getySpeed();
+	public float getxSpeed();
 
-	public void setY(float yNew);
+	public float getySpeed();
 }

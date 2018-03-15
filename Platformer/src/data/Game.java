@@ -26,7 +26,7 @@ public class Game {
 		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		effects = new ArrayList<Effect>();
 		entities = new ArrayList<Entity>();
-		entities.add(new Wheel(grid, camera, 5 * tileSize, 4 * tileSize));
+		entities.add(new Wheel(grid, camera, 15 * tileSize, 4 * tileSize, -5));
 
 	}
 
@@ -36,7 +36,7 @@ public class Game {
 		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		effects = new ArrayList<Effect>();
 		entities = new ArrayList<Entity>();
-		entities.add(new Wheel(grid, camera, 5 * tileSize, 4 * tileSize));
+		entities.add(new Wheel(grid, camera, 15 * tileSize, 4 * tileSize, -5));
 	}
 
 	public void update() {

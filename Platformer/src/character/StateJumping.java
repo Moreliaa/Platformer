@@ -73,8 +73,9 @@ public class StateJumping extends CharacterState {
 
 		if (stepX(c)) {
 			c.xSpeed = 0;
-			if (c.ySpeed > 0)
-				enterNewState(c, States.WallCling);
+			/*
+			 * if (c.ySpeed > 0) enterNewState(c, States.WallCling);
+			 */
 		}
 
 		if (stepY(c)) {
