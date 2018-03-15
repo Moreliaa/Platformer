@@ -1,6 +1,7 @@
 package enemy;
 
 import static helpers.Clock.delta;
+import static helpers.Graphics.WIDTH;
 import static helpers.Graphics.drawLineLoop;
 import static helpers.Graphics.drawQuadTex;
 import static helpers.Graphics.drawQuadTexFlipHorizontal;
@@ -25,7 +26,7 @@ public abstract class Enemy implements Entity {
 	Animation sprite;
 	float x, y; // physical x and y coordinates
 	float xSpeed, ySpeed; // axis aligned speed vectors
-	float activationRange;
+	public float activationRange;
 
 	float xTextureOffset, yTextureOffset, yOffset;
 
@@ -43,7 +44,7 @@ public abstract class Enemy implements Entity {
 		this.y = y;
 		this.xSpeed = 0;
 		this.ySpeed = 0;
-		this.activationRange = 500;
+		this.activationRange = 1.2f * WIDTH / 2f;
 
 		this.xTextureOffset = 0;
 		this.yTextureOffset = 0;
@@ -161,6 +162,10 @@ public abstract class Enemy implements Entity {
 			return Math.floorDiv((int) (y + height), tileSize) - 1;
 		else
 			return Math.floorDiv((int) (y + height), tileSize);
+	}
+
+	public float getActivationRange() {
+		return activationRange;
 	}
 
 }

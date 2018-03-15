@@ -2,10 +2,8 @@ package data;
 
 import static helpers.Graphics.HEIGHT;
 import static helpers.StateManager.setGameState;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
-import helpers.KeyboardHandler;
 import helpers.MouseHandler;
 import helpers.StateManager.GameState;
 
@@ -34,8 +32,10 @@ public class MainMenu {
 
 	private void handleInput() {
 
-		if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
-			glfwSetWindowShouldClose(_Main.window, true);
+		/*
+		 * if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
+		 * glfwSetWindowShouldClose(_Main.window, true);
+		 */
 
 		if (MouseHandler.isButtonDown(0)) {
 

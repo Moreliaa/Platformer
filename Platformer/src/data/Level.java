@@ -1,5 +1,7 @@
 package data;
 
+import static helpers.Physics.getDistance;
+
 import java.util.ArrayList;
 
 import character.Character;
@@ -29,8 +31,9 @@ public class Level {
 	}
 
 	private void updateEnemies() {
-		for (Entity e : enemies) {
-			e.update();
+		for (Enemy e : enemies) {
+			if (getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
+				e.update();
 		}
 
 	}
@@ -57,8 +60,9 @@ public class Level {
 	}
 
 	public void drawEnemies(Camera camera) {
-		for (Entity e : enemies) {
-			e.draw(camera);
+		for (Enemy e : enemies) {
+			if (getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
+				e.draw(camera);
 		}
 
 	}

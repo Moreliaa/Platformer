@@ -22,6 +22,11 @@ public class Physics {
 	private static int boostDuration = 10;
 	private static float boostSpeed = boostDistance / boostDuration;
 
+	public static float getDistance(float x1, float y1, float x2, float y2) {
+		return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+
+	}
+
 	/**
 	 * Step the x coordinate for movement. Returns true if there was a collision,
 	 * otherwise false.

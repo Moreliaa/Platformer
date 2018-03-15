@@ -25,7 +25,7 @@ public class Game {
 		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 4 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
 
 	}
 
@@ -35,7 +35,7 @@ public class Game {
 		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 4 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
 	}
 
 	public void update() {
