@@ -10,18 +10,22 @@ import static helpers.Physics.getMaxFallSpeed;
 import static helpers.Physics.stepX;
 import static helpers.Physics.stepY;
 
+import character.Character;
 import data.Animation;
 import data.Camera;
 import data.Entity;
+import data.Level;
 import data.Texture;
 import data.TileGrid;
 
 public abstract class Enemy implements Entity {
 	private TileGrid grid;
+	private Character player;
 	private Camera camera;
 	Animation sprite;
 	float x, y; // physical x and y coordinates
 	float xSpeed, ySpeed; // axis aligned speed vectors
+	float activationRange;
 
 	float xTextureOffset, yTextureOffset, yOffset;
 
@@ -31,13 +35,15 @@ public abstract class Enemy implements Entity {
 	float maxSpeed; // default max xSpeed, unrelated to ySpeed
 	int width, height; // hitbox dimensions
 
-	public Enemy(TileGrid grid, Camera c, float x, float y) {
-		this.grid = grid;
+	public Enemy(Level l, Camera c, float x, float y) {
+		this.grid = l.getGrid();
+		this.player = l.getCharacter();
 		this.camera = c;
 		this.x = x;
 		this.y = y;
 		this.xSpeed = 0;
 		this.ySpeed = 0;
+		this.activationRange = 500;
 
 		this.xTextureOffset = 0;
 		this.yTextureOffset = 0;

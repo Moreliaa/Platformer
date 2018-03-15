@@ -5,13 +5,13 @@ import static helpers.Physics.stepY;
 
 import data.Animation;
 import data.Camera;
+import data.Level;
 import data.Texture;
-import data.TileGrid;
 
 public class Wheel extends Enemy {
 
-	public Wheel(TileGrid grid, Camera c, float x, float y, float speed) {
-		super(grid, c, x, y);
+	public Wheel(Level l, Camera c, float x, float y, float speed) {
+		super(l, c, x, y);
 		sprite = new Animation(new Texture[] { new Texture("wheel", 100, 100) }, 1);
 		this.width = 60;
 		this.height = 60;

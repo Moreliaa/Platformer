@@ -14,63 +14,47 @@ import helpers.StateManager.GameState;
 
 public class Game {
 
-	private TileGrid grid;
+	private Level level;
 	private Camera camera;
-	private Character character;
-	private ArrayList<Entity> entities;
 	private static ArrayList<Effect> effects;
 
 	public Game(int[][] map) {
-		this.grid = new TileGrid(map);
+
+		TileGrid grid = new TileGrid(map);
 		this.camera = new Camera(grid);
-		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		entities = new ArrayList<Entity>();
-		entities.add(new Wheel(grid, camera, 15 * tileSize, 4 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 4 * tileSize, -5));
 
 	}
 
 	public Game(String map) {
-		this.grid = loadMap(map);
+		TileGrid grid = loadMap(map);
 		this.camera = new Camera(grid);
-		this.character = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		entities = new ArrayList<Entity>();
-		entities.add(new Wheel(grid, camera, 15 * tileSize, 4 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 4 * tileSize, -5));
 	}
 
 	public void update() {
 		handleInput();
-		updateEntities();
-		character.update();
-		camera.centerOn(character);
-		grid.draw(camera);
+		level.update();
+		camera.centerOn(level.getCharacter());
+		level.drawGrid(camera);
 		drawEffects();
-		drawEntities();
-		character.draw(camera);
+		level.drawEnemies(camera);
+		level.drawCharacter(camera);
 		drawDiagnostics();
 
 	}
 
 	private void drawDiagnostics() {
-		character.drawDiagnostics(camera);
+		level.getCharacter().drawDiagnostics(camera);
 
-		for (Entity e : entities) {
+		for (Entity e : level.getEnemies()) {
 			e.drawHitbox(camera);
-		}
-
-	}
-
-	private void updateEntities() {
-		for (Entity e : entities) {
-			e.update();
-		}
-
-	}
-
-	private void drawEntities() {
-		for (Entity e : entities) {
-			e.draw(camera);
 		}
 
 	}
