@@ -1,27 +1,34 @@
 package data;
 
-import static helpers.Physics.getDistance;
+import static helpers.Graphics.*;
+import static helpers.Physics.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import character.Character;
-import enemy.Enemy;
+import enemy.*;
 
 public class Level {
 	private TileGrid grid;
 	private Character character;
 	private ArrayList<Enemy> enemies;
+	private Texture background;
+	float backgroundScrollSpeed;
 
 	public Level(TileGrid grid, Character character) {
 		this.grid = grid;
 		this.character = character;
 		this.enemies = new ArrayList<Enemy>();
+		background = new Texture("bg", 64, 341);
+		backgroundScrollSpeed = 0.1f;
 	}
 
 	public Level(TileGrid grid, Character character, ArrayList<Enemy> enemies) {
 		this.grid = grid;
 		this.character = character;
 		this.enemies = enemies;
+		background = new Texture("bg", 64, 341);
+		backgroundScrollSpeed = 0.1f;
 	}
 
 	public void update() {
@@ -52,6 +59,19 @@ public class Level {
 
 	public void addEnemy(Enemy e) {
 		this.enemies.add(e);
+	}
+
+	public void drawBackground(Camera camera) {
+		float x = -camera.getX() * backgroundScrollSpeed;
+		float y = -camera.getY() * backgroundScrollSpeed;
+		while (x < -background.getWidth()) {
+			x += background.getWidth();
+		}
+
+		while (y < -background.getHeight()) {
+			x += background.getHeight();
+		}
+		fill(background, x, y, background.getWidth(), background.getHeight());
 	}
 
 	public void drawGrid(Camera camera) {

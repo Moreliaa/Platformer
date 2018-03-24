@@ -1,16 +1,15 @@
 package data;
 
-import static helpers.Graphics.tileSize;
-import static helpers.LevelManager.loadMap;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static helpers.Graphics.*;
+import static helpers.LevelManager.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import character.Character;
-import enemy.Wheel;
-import helpers.KeyboardHandler;
-import helpers.StateManager;
-import helpers.StateManager.GameState;
+import enemy.*;
+import helpers.*;
+import helpers.StateManager.*;
 
 public class Game {
 
@@ -42,6 +41,7 @@ public class Game {
 		handleInput();
 		level.update();
 		camera.centerOn(level.getCharacter());
+		level.drawBackground(camera);
 		level.drawGrid(camera);
 		drawEffects();
 		level.drawEnemies(camera);

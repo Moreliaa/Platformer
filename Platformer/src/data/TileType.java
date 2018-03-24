@@ -1,10 +1,10 @@
 package data;
 
-import static helpers.Graphics.tileSize;
+import static helpers.Graphics.*;
 
 public enum TileType {
 	/*@formatter:off*/
-	Background("bg", false, "000", 0, 0), Block("block", true, "001", 0, 0),
+	Background("blank", false, "000", 0, 0), Block("block", true, "001", 0, 0),
 	Slope0x15("slope0x15", true, "002", 0, 15), Slope16x31("slope16x31", true, "003", 16, 31),
 	Slope32x47("slope32x47", true, "004", 32, 47), Slope48x63("slope48x63", true, "005", 48, 63),
 	Slope15x0("slope15x0", true, "006", 15, 0), Slope31x16("slope31x16", true, "007", 31, 16),

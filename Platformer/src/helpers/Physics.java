@@ -1,12 +1,11 @@
 package helpers;
 
-import static helpers.Clock.delta;
-import static helpers.Graphics.tileSize;
+import static helpers.Clock.*;
+import static helpers.Graphics.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import data.Entity;
-import data.Tile;
+import data.*;
 
 public class Physics {
 
@@ -24,7 +23,6 @@ public class Physics {
 
 	public static float getDistance(float x1, float y1, float x2, float y2) {
 		return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-
 	}
 
 	/**
