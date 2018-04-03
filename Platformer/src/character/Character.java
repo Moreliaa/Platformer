@@ -1,14 +1,8 @@
 package character;
 
-import static helpers.Graphics.drawLineLoop;
-import static helpers.Graphics.drawQuadTex;
-import static helpers.Graphics.drawQuadTexFlipHorizontal;
-import static helpers.Graphics.tileSize;
+import static helpers.Graphics.*;
 
-import data.Camera;
-import data.Entity;
-import data.Texture;
-import data.TileGrid;
+import data.*;
 
 public class Character implements Entity {
 
@@ -84,6 +78,8 @@ public class Character implements Entity {
 
 	public void drawDiagnostics(Camera c) {
 		drawHitbox(c);
+		// System.out.println(x);
+		// System.out.println(y);
 	}
 
 	public void draw(Camera c) {

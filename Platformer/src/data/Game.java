@@ -7,7 +7,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.util.*;
 
 import character.Character;
-import enemy.*;
 import helpers.*;
 import helpers.StateManager.*;
 
@@ -21,20 +20,20 @@ public class Game {
 
 		TileGrid grid = new TileGrid(map);
 		this.camera = new Camera(grid);
-		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		Character c = new Character(grid, camera, 5 * tileSize, 15 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
+		// level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
 
 	}
 
 	public Game(String map) {
 		TileGrid grid = loadMap(map);
 		this.camera = new Camera(grid);
-		Character c = new Character(grid, camera, 9 * tileSize, 4 * tileSize);
+		Character c = new Character(grid, camera, 5 * tileSize, 15 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
+		// level.addEnemy(new Wheel(level, camera, 40 * tileSize, 1 * tileSize, -5));
 	}
 
 	public void update() {

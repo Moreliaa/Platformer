@@ -114,7 +114,7 @@ public class Physics {
 		if (e.getySpeed() >= 0) {
 			for (int xCoord = e.getxCoord(); xCoord <= e.getxCoordR(); xCoord++) {
 				if (e.getGrid().getTile(xCoord, e.getyCoordB()).getType().getyFloorL() != 0
-						|| e.getGrid().getTile(xCoord, e.getyCoordB()).getType().getyFloorL() != 0)
+						|| e.getGrid().getTile(xCoord, e.getyCoordB()).getType().getyFloorR() != 0)
 					tiles.add(e.getGrid().getTile(xCoord, e.getyCoordB()));
 			}
 		}

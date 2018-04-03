@@ -1,22 +1,12 @@
 package data;
 
-import static helpers.Clock.delta;
-import static helpers.Graphics.tileSize;
-import static helpers.LevelManager.loadMap;
-import static helpers.LevelManager.saveMap;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static helpers.Clock.*;
+import static helpers.Graphics.*;
+import static helpers.LevelManager.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import helpers.KeyboardHandler;
-import helpers.MouseHandler;
-import helpers.StateManager;
-import helpers.StateManager.GameState;
+import helpers.*;
+import helpers.StateManager.*;
 
 public class Editor {
 
@@ -39,6 +29,15 @@ public class Editor {
 
 	public Editor(int[][] map) {
 		grid = new TileGrid(map);
+		camera = new Camera(grid);
+		cameraSpeed = 100;
+		types = TileType.values();
+		tileSelector = new EditorTileSelector(types);
+		index = 0;
+	}
+
+	public Editor(int width, int height) {
+		grid = new TileGrid(width, height);
 		camera = new Camera(grid);
 		cameraSpeed = 100;
 		types = TileType.values();
