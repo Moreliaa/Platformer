@@ -15,9 +15,11 @@ public class Game {
 
 	private Level level;
 	private Camera camera;
+	private boolean drawDiag;
 	private static ArrayList<Effect> effects;
 
 	public Game(int[][] map) {
+		drawDiag = false;
 
 		TileGrid grid = new TileGrid(map);
 		this.camera = new Camera(grid);
@@ -29,6 +31,7 @@ public class Game {
 	}
 
 	public Game(String map) {
+		drawDiag = false;
 		TileGrid grid = loadMap(map);
 		this.camera = new Camera(grid);
 		Character c = new Character(grid, camera, 5 * tileSize, 15 * tileSize);
@@ -46,7 +49,8 @@ public class Game {
 		drawEffects();
 		level.drawEnemies(camera);
 		level.drawCharacter(camera);
-		drawDiagnostics();
+		if (drawDiag)
+			drawDiagnostics();
 
 	}
 
@@ -62,6 +66,8 @@ public class Game {
 	private void handleInput() {
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
 			StateManager.setGameState(GameState.MAINMENU);
+		if (KeyboardHandler.wasKeyReleased(GLFW_KEY_F1))
+			drawDiag = !drawDiag;
 	}
 
 	public static void addNewEffect(Effect e) {

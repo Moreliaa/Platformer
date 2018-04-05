@@ -5,6 +5,7 @@ A simple 2D platformer. WIP
 Up - Jump
 Left, Right - Walk
 (while airborne) A + directions - 8-directional boost
+F1 - display hitboxes
 ```
 # Features
   * Updates at 60 fps
