@@ -1,23 +1,11 @@
 package enemy;
 
-import static helpers.Clock.delta;
-import static helpers.Graphics.WIDTH;
-import static helpers.Graphics.drawLineLoop;
-import static helpers.Graphics.drawQuadTex;
-import static helpers.Graphics.drawQuadTexFlipHorizontal;
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.getGravity;
-import static helpers.Physics.getMaxFallSpeed;
-import static helpers.Physics.stepX;
-import static helpers.Physics.stepY;
+import static helpers.Clock.*;
+import static helpers.Graphics.*;
+import static helpers.Physics.*;
 
 import character.Character;
-import data.Animation;
-import data.Camera;
-import data.Entity;
-import data.Level;
-import data.Texture;
-import data.TileGrid;
+import data.*;
 
 public abstract class Enemy implements Entity {
 	private TileGrid grid;
@@ -27,6 +15,7 @@ public abstract class Enemy implements Entity {
 	float x, y; // physical x and y coordinates
 	float xSpeed, ySpeed; // axis aligned speed vectors
 	public float activationRange;
+	int damage;
 
 	float xTextureOffset, yTextureOffset, yOffset;
 
@@ -44,7 +33,8 @@ public abstract class Enemy implements Entity {
 		this.y = y;
 		this.xSpeed = 0;
 		this.ySpeed = 0;
-		this.activationRange = 1.2f * WIDTH / 2f;
+		this.activationRange = 2.0f * WIDTH / 2f;
+		this.damage = 1;
 
 		this.xTextureOffset = 0;
 		this.yTextureOffset = 0;
@@ -166,6 +156,10 @@ public abstract class Enemy implements Entity {
 
 	public float getActivationRange() {
 		return activationRange;
+	}
+
+	public int getDamage() {
+		return damage;
 	}
 
 }

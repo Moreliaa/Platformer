@@ -1,18 +1,13 @@
 package character;
 
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.stepX;
-import static helpers.Physics.stepY;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static helpers.Graphics.*;
+import static helpers.Physics.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import data.Tile;
-import data.TileGrid;
-import helpers.KeyboardHandler;
-import helpers.Physics;
+import data.*;
+import helpers.*;
 
 public class StateWallCling extends CharacterState {
 
@@ -78,6 +73,8 @@ public class StateWallCling extends CharacterState {
 
 	@Override
 	public void update(Character c) {
+		super.updateCharacterTimers(c);
+
 		c.ySpeed += Physics.getGravity();
 
 		if (c.ySpeed > maxSlideSpeed)

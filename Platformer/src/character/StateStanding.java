@@ -1,15 +1,10 @@
 package character;
 
-import static helpers.Physics.stepX;
-import static helpers.Physics.stepY;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static helpers.Physics.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import data.EffectAfterimage;
-import helpers.Clock;
-import helpers.KeyboardHandler;
-import helpers.Physics;
+import data.*;
+import helpers.*;
 
 public class StateStanding extends CharacterState {
 
@@ -42,6 +37,8 @@ public class StateStanding extends CharacterState {
 
 	@Override
 	public void update(Character c) {
+		super.updateCharacterTimers(c);
+
 		if (c.dashActive) {
 			EffectAfterimage e = new EffectAfterimage(c, c.state.sprite.getCurrentTexture(), 1, 1, 1);
 			data.Game.addNewEffect(e);

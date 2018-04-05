@@ -27,6 +27,7 @@ public class StateWallJump extends CharacterState {
 	@Override
 	public void update(Character c) {
 		iterator++;
+		super.updateCharacterTimers(c);
 		enterNewState(c, States.Jumping);
 
 	}

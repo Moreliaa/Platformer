@@ -1,19 +1,10 @@
 package character;
 
-import static helpers.Clock.delta;
-import static helpers.Graphics.tileSize;
-import static helpers.Physics.checkCollision;
-import static helpers.Physics.getGravity;
-import static helpers.Physics.getMaxFallSpeed;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static helpers.Clock.*;
+import static helpers.Physics.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import java.util.ArrayList;
-
-import data.Tile;
-import data.TileGrid;
-import helpers.KeyboardHandler;
+import helpers.*;
 
 public abstract class CharacterState {
 
@@ -36,7 +27,16 @@ public abstract class CharacterState {
 
 	abstract public void update(Character c);
 
+	public void updateCharacterTimers(Character c) {
+		if (c.damageInvulDurationCurrent > 0)
+			c.damageInvulDurationCurrent--;
+
+		if (c.damageInvulDurationCurrent == 0)
+			c.damageInvul = false;
+	}
+
 	public void setFlags(Character c) {
+
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT) && !KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
 			c.facingRight = true;
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_LEFT) && !KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))

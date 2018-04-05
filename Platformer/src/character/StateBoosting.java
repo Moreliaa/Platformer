@@ -1,18 +1,10 @@
 package character;
 
-import static helpers.Physics.getBoostDuration;
-import static helpers.Physics.getBoostSpeed;
-import static helpers.Physics.getInitialSmallJumpVelocity;
-import static helpers.Physics.stepX;
-import static helpers.Physics.stepY;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static helpers.Physics.*;
+import static org.lwjgl.glfw.GLFW.*;
 
-import data.EffectAfterimage;
-import data.Texture;
-import helpers.KeyboardHandler;
+import data.*;
+import helpers.*;
 
 public class StateBoosting extends CharacterState {
 
@@ -21,6 +13,7 @@ public class StateBoosting extends CharacterState {
 
 	@Override
 	public void enter(Character c) {
+		c.damageInvul = true;
 		duration = 0;
 		xDir = 0;
 		yDir = 0;
@@ -70,6 +63,7 @@ public class StateBoosting extends CharacterState {
 	@Override
 	public void enterNewState(Character c, States s) {
 		if (duration >= getBoostDuration()) { // prevent exiting boost state prematurely
+			c.damageInvul = false;
 			c.xSpeed = c.maxSpeed * xDir;
 			c.ySpeed = (-1) * getInitialSmallJumpVelocity() * yDir;
 			c.state = s;

@@ -1,7 +1,6 @@
 package character;
 
-import data.Animation;
-import data.Texture;
+import data.*;
 
 public enum States {
 	Standing(new StateStanding(), new Texture[] { new Texture("mm_idle", 158, 158) }),
@@ -16,6 +15,8 @@ public enum States {
 	Jumping(new StateJumping(), new Texture[] { new Texture("mm001", 158, 158) }),
 
 	Boosting(new StateBoosting(), new Texture[] { new Texture("mm001", 158, 158) }),
+
+	Damaged(new StateDamaged(), new Texture[] { new Texture("mm007", 158, 158) }),
 
 	WallCling(new StateWallCling(), new Texture[] { new Texture("mm007", 158, 158) }),
 

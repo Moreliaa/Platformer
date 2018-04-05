@@ -12,6 +12,8 @@ public class Character implements Entity {
 	float xSpeed, ySpeed; // axis aligned speed vectors
 	float maxSpeed; // default max xSpeed, unrelated to ySpeed
 
+	int health;
+
 	float airControl; // strength of air control
 	float airFriction; // strength of air resistance
 
@@ -21,6 +23,10 @@ public class Character implements Entity {
 
 	States state;
 	boolean facingRight; // returns true while the character is facing to the right
+
+	boolean damageInvul; // invulnerability window after being damaged
+	int damageInvulDurationTotal, damageInvulDurationCurrent; // invulnerability timer after landing
+	int damageInvulSpriteFlashInterval, damageInvulSpriteFlashDuration;
 
 	boolean jumpDisabled, wallJumpDisabled, boostDisabled;
 
@@ -37,6 +43,7 @@ public class Character implements Entity {
 		this.xSpeed = 0;
 		this.ySpeed = 0;
 		this.maxSpeed = 10;
+		this.health = 3;
 		this.airControl = 2;
 		this.airFriction = 0.1f;
 		this.width = 60;
@@ -47,6 +54,12 @@ public class Character implements Entity {
 
 		this.state = States.Standing;
 		this.facingRight = true;
+
+		this.damageInvul = false;
+		this.damageInvulDurationTotal = 60;
+		this.damageInvulDurationCurrent = 0;
+		this.damageInvulSpriteFlashInterval = 6;
+		this.damageInvulSpriteFlashDuration = 3;
 
 		this.jumpDisabled = true;
 		this.wallJumpDisabled = true;
@@ -65,15 +78,6 @@ public class Character implements Entity {
 		state.s.handleInput(this);
 		state.s.update(this);
 
-		/*
-		 * x += xSpeed * delta() * 60; state.s.handleCollisionX(this, grid);
-		 */
-		/*
-		 * stepX(this); stepY(this);
-		 */
-		/*
-		 * y += ySpeed * delta() * 60; state.s.handleCollisionY(this, grid);
-		 */
 	}
 
 	public void drawDiagnostics(Camera c) {
@@ -87,14 +91,35 @@ public class Character implements Entity {
 
 		setTextureOffsets();
 
-		if (facingRight)
-			drawQuadTex(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
-		else
-			drawQuadTexFlipHorizontal(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
+		boolean flash = false;
+		if (this.damageInvulDurationCurrent > 0 && this.damageInvulDurationCurrent != this.damageInvulDurationTotal) {
+			if (this.damageInvulDurationCurrent
+					% this.damageInvulSpriteFlashInterval <= this.damageInvulSpriteFlashDuration)
+
+				flash = true;
+		}
+
+		if (flash == false) {
+			if (facingRight)
+				drawQuadTex(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
+			else
+				drawQuadTexFlipHorizontal(c, t, xTextureOffset, yTextureOffset, t.getWidth(), t.getHeight());
+		}
 	}
 
 	public void drawHitbox(Camera c) {
 		drawLineLoop(c, x, y, width, height);
+	}
+
+	public void damage(int damage) {
+		if (damageInvul == false) {
+			health -= damage;
+			if (health <= 0) {
+				// TODO ded
+			}
+
+			state.s.enterNewState(this, States.Damaged);
+		}
 	}
 
 	public float getX() {

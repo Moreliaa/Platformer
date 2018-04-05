@@ -1,17 +1,14 @@
 package enemy;
 
-import static helpers.Physics.stepX;
-import static helpers.Physics.stepY;
+import static helpers.Physics.*;
 
-import data.Animation;
-import data.Camera;
-import data.Level;
-import data.Texture;
+import data.*;
 
 public class Wheel extends Enemy {
 
 	public Wheel(Level l, Camera c, float x, float y, float speed) {
 		super(l, c, x, y);
+		this.damage = 1;
 		sprite = new Animation(new Texture[] { new Texture("wheel", 100, 100) }, 1);
 		this.width = 60;
 		this.height = 60;

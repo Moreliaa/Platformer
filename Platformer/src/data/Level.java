@@ -7,11 +7,14 @@ import java.util.*;
 
 import character.Character;
 import enemy.*;
+import helpers.*;
 
 public class Level {
 	private TileGrid grid;
 	private Character character;
 	private ArrayList<Enemy> enemies;
+	private ArrayList<Enemy> enemiesActive;
+	private int enemiesActiveUpdateCounter, enemiesActiveUpdateInterval;
 	private Texture background;
 	float backgroundScrollSpeed;
 
@@ -19,6 +22,9 @@ public class Level {
 		this.grid = grid;
 		this.character = character;
 		this.enemies = new ArrayList<Enemy>();
+		this.enemiesActive = new ArrayList<Enemy>();
+		this.enemiesActiveUpdateInterval = 30;
+		this.enemiesActiveUpdateCounter = this.enemiesActiveUpdateInterval;
 		background = new Texture("bg", 64, 341);
 		backgroundScrollSpeed = 0.1f;
 	}
@@ -27,6 +33,9 @@ public class Level {
 		this.grid = grid;
 		this.character = character;
 		this.enemies = enemies;
+		this.enemiesActive = new ArrayList<Enemy>();
+		this.enemiesActiveUpdateInterval = 30;
+		this.enemiesActiveUpdateCounter = this.enemiesActiveUpdateInterval;
 		background = new Texture("bg", 64, 341);
 		backgroundScrollSpeed = 0.1f;
 	}
@@ -34,13 +43,36 @@ public class Level {
 	public void update() {
 		updateEnemies();
 		character.update();
+		checkEnemyCollision();
 
 	}
 
+	private void checkEnemyCollision() {
+		for (Enemy e : enemiesActive) {
+			if (Physics.checkCollision(character.getX(), character.getY(), character.getWidth(), character.getHeight(),
+					e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+				character.damage(e.getDamage());
+				break;
+				// TODO Make this independent from iteration order
+			}
+		}
+	}
+
 	private void updateEnemies() {
-		for (Enemy e : enemies) {
-			if (getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
-				e.update();
+		this.enemiesActiveUpdateCounter++;
+
+		// refresh the list of active enemies
+		if (this.enemiesActiveUpdateCounter >= this.enemiesActiveUpdateInterval) {
+			enemiesActive.clear();
+			this.enemiesActiveUpdateCounter = 0;
+			for (Enemy e : enemies) {
+				if (getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
+					enemiesActive.add(e);
+			}
+		}
+
+		for (Enemy e : enemiesActive) {
+			e.update();
 		}
 
 	}
