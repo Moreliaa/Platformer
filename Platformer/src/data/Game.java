@@ -18,6 +18,7 @@ public class Game {
 	private boolean drawDiag;
 	private static ArrayList<Effect> effects;
 
+	@Deprecated
 	public Game(int[][] map) {
 		drawDiag = false;
 
@@ -26,7 +27,7 @@ public class Game {
 		Character c = new Character(grid, camera, 5 * tileSize, 15 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 10 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 10 * tileSize));
 
 	}
 
@@ -37,7 +38,8 @@ public class Game {
 		Character c = new Character(grid, camera, 5 * tileSize, 15 * tileSize);
 		level = new Level(grid, c);
 		effects = new ArrayList<Effect>();
-		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 10 * tileSize, -5));
+		level.addEnemy(new Wheel(level, camera, 15 * tileSize, 10 * tileSize));
+		level.addEnemy(new Brute(level, camera, 20 * tileSize, 13 * tileSize));
 	}
 
 	public void update() {
