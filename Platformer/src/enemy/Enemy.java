@@ -15,11 +15,12 @@ public abstract class Enemy implements Entity {
 	float x, y; // physical x and y coordinates
 	float xSpeed, ySpeed; // axis aligned speed vectors
 	public float activationRange;
-	int damage;
+	int damage, health;
 
 	float xTextureOffset, yTextureOffset, yOffset;
 
 	boolean facingRight; // returns true while the character is facing to the right
+	boolean alive;
 
 	/* Specific properties */
 	float maxSpeed; // default max xSpeed, unrelated to ySpeed
@@ -35,12 +36,14 @@ public abstract class Enemy implements Entity {
 		this.ySpeed = 0;
 		this.activationRange = 2.0f * WIDTH / 2f;
 		this.damage = 1;
+		this.health = 1;
 
 		this.xTextureOffset = 0;
 		this.yTextureOffset = 0;
 		this.yOffset = 0;
 
 		this.facingRight = true;
+		this.alive = true;
 	}
 
 	public void update() {
@@ -160,6 +163,23 @@ public abstract class Enemy implements Entity {
 
 	public int getDamage() {
 		return damage;
+	}
+
+	public void damage() {
+		health -= 1;
+
+		if (health <= 0)
+			die();
+
+	}
+
+	private void die() {
+		this.alive = false;
+		Game.addNewEffect(new EffectExplosion(this));
+	}
+
+	public boolean isAlive() {
+		return alive;
 	}
 
 }

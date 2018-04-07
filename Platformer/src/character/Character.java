@@ -219,4 +219,8 @@ public class Character implements Entity {
 			return Math.floorDiv((int) (y + height), tileSize);
 	}
 
+	public States getState() {
+		return state;
+	}
+
 }

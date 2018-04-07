@@ -5,6 +5,7 @@ import static helpers.Physics.*;
 
 import java.util.*;
 
+import character.*;
 import character.Character;
 import enemy.*;
 import helpers.*;
@@ -49,9 +50,13 @@ public class Level {
 
 	private void checkEnemyCollision() {
 		for (Enemy e : enemiesActive) {
-			if (Physics.checkCollision(character.getX(), character.getY(), character.getWidth(), character.getHeight(),
-					e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
-				character.damage(e.getDamage());
+			if (e.isAlive() && Physics.checkCollision(character.getX(), character.getY(), character.getWidth(),
+					character.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+				if (character.getState() == States.Boosting) {
+					e.damage();
+				} else {
+					character.damage(e.getDamage());
+				}
 				break;
 				// TODO Make this independent from iteration order
 			}
@@ -72,7 +77,8 @@ public class Level {
 		}
 
 		for (Enemy e : enemiesActive) {
-			e.update();
+			if (e.isAlive())
+				e.update();
 		}
 
 	}
@@ -113,7 +119,8 @@ public class Level {
 
 	public void drawEnemies(Camera camera) {
 		for (Enemy e : enemies) {
-			if (getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
+			if (e.isAlive()
+					&& getDistance(character.getX(), character.getY(), e.getX(), e.getY()) < e.getActivationRange())
 				e.draw(camera);
 		}
 
