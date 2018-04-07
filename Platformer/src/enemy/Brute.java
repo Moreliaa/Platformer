@@ -16,7 +16,7 @@ public class Brute extends Enemy {
 		this.height = 60;
 		this.maxSpeed = 5;
 		this.yOffset = (sprite.getCurrentTexture().getHeight() - height) / 2;
-		this.movepattern = new WaveSine(1f, 300);
+		this.movepattern = new WaveSine(5f, 120);
 		this.baseY = this.y;
 	}
 

@@ -14,8 +14,9 @@ public class WaveSine {
 
 	private void calculatePhaseValues() {
 		for (int i = 0; i < phase.length; i++) {
-			float angle = 360 * (float) i / (float) phase.length;
-			phase[i] = (float) Math.sin(angle * (180 / Math.PI)) * amplitude;
+			float angle = 360f * (float) i / (float) phase.length;
+			// System.out.println(angle);
+			phase[i] = (float) Math.sin(angle * (Math.PI / 180f)) * amplitude;
 			// System.out.println(phase[i]);
 		}
 	}

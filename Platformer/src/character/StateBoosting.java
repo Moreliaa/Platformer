@@ -51,7 +51,7 @@ public class StateBoosting extends CharacterState {
 			c.ySpeed *= Math.abs(Math.cos(45 * 180 / Math.PI));
 		}
 
-		c.getCamera().shake(6, 15);
+		c.getCamera().shake(10, 15);
 		EffectAfterimage e = new EffectAfterimage(c, new Texture("mm001", 158, 158), 3, 2, 5);
 		data.Game.addNewEffect(e);
 
